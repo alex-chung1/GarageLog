@@ -56,7 +56,7 @@ export default function Garage() {
                 <div className="mb-6 rounded-lg bg-red-950 p-3 text-sm text-red-300">{error}</div>
             )}
 
-            {/* Empty State */}
+            {/* VehicleCard */}
             {vehicles.length === 0 ? (
                 <div className="rounded-xl border border-border bg-card p-6 text-muted shadow-sm">
                     No vehicles found.

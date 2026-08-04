@@ -55,7 +55,9 @@ export default function ServiceRecordCard({ record }: { record: ServiceRecordRes
                             >
                                 <span className="text-primary">•</span>
 
-                                {item.serviceTypeName}
+                                {item.serviceTypeName === 'Other' && item.customName
+                                    ? `${item.serviceTypeName}: ${item.customName}`
+                                    : item.serviceTypeName}
                             </li>
                         ))}
                     </ul>
