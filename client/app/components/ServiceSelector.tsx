@@ -1,28 +1,14 @@
+import type { ServiceType, SelectedService } from '~/types/serviceType'
+
 import { useState } from 'react'
-
-type ServiceType = {
-    id: number
-    name: string
-}
-
-type SelectedService = {
-    serviceTypeId: number
-    name: string
-    customName?: string
-}
 
 type ServiceSelectorProps = {
     serviceTypes: ServiceType[]
     onChange: (services: SelectedService[]) => void
 }
 
-export default function ServiceSelector({
-    serviceTypes,
-    onChange,
-}: ServiceSelectorProps) {
-    const [selectedServices, setSelectedServices] = useState<SelectedService[]>(
-        [],
-    )
+export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelectorProps) {
+    const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
 
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false)
@@ -34,19 +20,12 @@ export default function ServiceSelector({
 
     const searchableServices = serviceTypes
         .filter((service) => service.id !== 9999)
+        .filter((service) => !popularServices.some((popular) => popular.id === service.id))
         .filter(
             (service) =>
-                !popularServices.some((popular) => popular.id === service.id),
+                !selectedServices.some((selected) => selected.serviceTypeId === service.id),
         )
-        .filter(
-            (service) =>
-                !selectedServices.some(
-                    (selected) => selected.serviceTypeId === service.id,
-                ),
-        )
-        .filter((service) =>
-            service.name.toLowerCase().includes(search.toLowerCase()),
-        )
+        .filter((service) => service.name.toLowerCase().includes(search.toLowerCase()))
 
     function updateSelected(services: SelectedService[]) {
         setSelectedServices(services)
@@ -68,9 +47,7 @@ export default function ServiceSelector({
 
     function removeService(serviceTypeId: number) {
         updateSelected(
-            selectedServices.filter(
-                (service) => service.serviceTypeId !== serviceTypeId,
-            ),
+            selectedServices.filter((service) => service.serviceTypeId !== serviceTypeId),
         )
     }
 
@@ -94,9 +71,7 @@ export default function ServiceSelector({
 
     return (
         <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-text">
-                Services Performed
-            </h2>
+            <h2 className="mb-4 text-xl font-semibold text-text">Services Performed</h2>
 
             {/* Search */}
             <div className="relative">
@@ -115,9 +90,7 @@ export default function ServiceSelector({
                 {showSearch && search && (
                     <div className="absolute z-10 mt-2 w-full rounded-lg border border-border bg-card shadow-lg">
                         {searchableServices.length === 0 ? (
-                            <div className="p-3 text-sm text-muted">
-                                No services found.
-                            </div>
+                            <div className="p-3 text-sm text-muted">No services found.</div>
                         ) : (
                             searchableServices.map((service) => (
                                 <button
@@ -147,14 +120,11 @@ export default function ServiceSelector({
                             <input
                                 type="checkbox"
                                 checked={selectedServices.some(
-                                    (selected) =>
-                                        selected.serviceTypeId === service.id,
+                                    (selected) => selected.serviceTypeId === service.id,
                                 )}
                                 onChange={() => {
                                     const exists = selectedServices.some(
-                                        (selected) =>
-                                            selected.serviceTypeId ===
-                                            service.id,
+                                        (selected) => selected.serviceTypeId === service.id,
                                     )
 
                                     if (exists) {
@@ -174,35 +144,23 @@ export default function ServiceSelector({
             {/* Selected */}
             {selectedServices.length > 0 && (
                 <div className="mt-5">
-                    <h3 className="mb-2 font-medium text-text">
-                        Selected Services
-                    </h3>
+                    <h3 className="mb-2 font-medium text-text">Selected Services</h3>
 
                     {/* System Services */}
-                    {selectedServices.some(
-                        (service) => service.serviceTypeId !== 9999,
-                    ) && (
+                    {selectedServices.some((service) => service.serviceTypeId !== 9999) && (
                         <div className="space-y-2">
                             {selectedServices
-                                .filter(
-                                    (service) => service.serviceTypeId !== 9999,
-                                )
+                                .filter((service) => service.serviceTypeId !== 9999)
                                 .map((service) => (
                                     <div
                                         key={`${service.serviceTypeId}-${service.name}`}
                                         className="flex items-center justify-between rounded-lg bg-background px-3 py-2 text-sm"
                                     >
-                                        <span className="text-text">
-                                            {service.name}
-                                        </span>
+                                        <span className="text-text">{service.name}</span>
 
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                removeService(
-                                                    service.serviceTypeId,
-                                                )
-                                            }
+                                            onClick={() => removeService(service.serviceTypeId)}
                                             className="text-muted hover:text-text"
                                         >
                                             ✕
@@ -213,9 +171,7 @@ export default function ServiceSelector({
                     )}
 
                     {/* Custom Services */}
-                    {selectedServices.some(
-                        (service) => service.serviceTypeId === 9999,
-                    ) && (
+                    {selectedServices.some((service) => service.serviceTypeId === 9999) && (
                         <div className="mt-4">
                             <h4 className="mb-2 text-sm font-semibold text-primary">
                                 Custom Services
@@ -223,10 +179,7 @@ export default function ServiceSelector({
 
                             <div className="space-y-2">
                                 {selectedServices
-                                    .filter(
-                                        (service) =>
-                                            service.serviceTypeId === 9999,
-                                    )
+                                    .filter((service) => service.serviceTypeId === 9999)
                                     .map((service) => (
                                         <div
                                             key={`${service.serviceTypeId}-${service.name}`}
@@ -238,11 +191,7 @@ export default function ServiceSelector({
 
                                             <button
                                                 type="button"
-                                                onClick={() =>
-                                                    removeService(
-                                                        service.serviceTypeId,
-                                                    )
-                                                }
+                                                onClick={() => removeService(service.serviceTypeId)}
                                                 className="text-muted hover:text-text"
                                             >
                                                 ✕

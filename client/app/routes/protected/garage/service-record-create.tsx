@@ -1,4 +1,6 @@
 import type { Route } from './+types/service-record-create'
+import type { ServiceType, SelectedService } from '~/types/serviceType'
+
 import {
     Form,
     Link,
@@ -15,17 +17,6 @@ import { ServiceRecordsApi } from '~/lib/api/service-record.server'
 
 import ServiceSelector from '~/components/ServiceSelector'
 
-type SelectedService = {
-    serviceTypeId: number
-    name: string
-    customName?: string
-}
-
-type ServiceTypeResponse = {
-    id: number
-    name: string
-}
-
 export async function loader({ request }: Route.LoaderArgs) {
     const response = await ServiceTypesApi.getAll(request)
 
@@ -35,7 +26,7 @@ export async function loader({ request }: Route.LoaderArgs) {
         })
     }
 
-    const serviceTypes: ServiceTypeResponse[] = await response.json()
+    const serviceTypes: ServiceType[] = await response.json()
 
     return {
         serviceTypes,
