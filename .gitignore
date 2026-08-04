@@ -20,6 +20,7 @@ client/dist/
 
 # React Router generated files
 client/.react-router/
+client/build/
 
 
 # ======================
