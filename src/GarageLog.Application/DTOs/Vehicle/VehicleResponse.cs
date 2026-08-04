@@ -16,7 +16,7 @@ public class VehicleResponse
 
     public string? Vin { get; set; }
 
-    public int? Mileage { get; set; }
+    public int? LatestMileage { get; set; }
 
     public DateTime CreatedAt { get; set; }
 }

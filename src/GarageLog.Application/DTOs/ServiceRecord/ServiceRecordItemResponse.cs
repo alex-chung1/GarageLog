@@ -8,7 +8,5 @@ public class ServiceRecordItemResponse
 
     public string ServiceTypeName { get; set; } = string.Empty;
 
-    public int Quantity { get; set; }
-
     public string? CustomName { get; set; }
 }

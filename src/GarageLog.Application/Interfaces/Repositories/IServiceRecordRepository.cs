@@ -8,9 +8,11 @@ public interface IServiceRecordRepository
 
     Task<IEnumerable<ServiceRecord>> GetAllByVehicleIdAsync(int vehicleId);
 
-    Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateTime serviceDate);
+    Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateOnly serviceDate);
 
-    Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateTime serviceDate);
+    Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateOnly serviceDate);
+
+    Task<ServiceRecord?> GetLatestRecordAsync(int vehicleId);
 
     void Delete(ServiceRecord serviceRecord);
 }

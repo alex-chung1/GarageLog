@@ -25,7 +25,7 @@ public class ServiceRecordRepository(AppDbContext context) : IServiceRecordRepos
             .ToListAsync();
     }
 
-    public async Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateTime serviceDate)
+    public async Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateOnly serviceDate)
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate < serviceDate)
@@ -34,12 +34,21 @@ public class ServiceRecordRepository(AppDbContext context) : IServiceRecordRepos
             .FirstOrDefaultAsync();
     }
 
-    public async Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateTime serviceDate)
+    public async Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateOnly serviceDate)
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate > serviceDate)
             .OrderBy(sr => sr.ServiceDate)
             .ThenBy(sr => sr.Id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<ServiceRecord?> GetLatestRecordAsync(int vehicleId)
+    {
+        return await context
+            .ServiceRecords.Where(sr => sr.VehicleId == vehicleId)
+            .OrderByDescending(sr => sr.ServiceDate)
+            .ThenByDescending(sr => sr.Id)
             .FirstOrDefaultAsync();
     }
 

@@ -11,4 +11,9 @@ public class ServiceTypeRepository(AppDbContext context) : IServiceTypeRepositor
     {
         return await context.ServiceTypes.FirstOrDefaultAsync(st => st.Id == id);
     }
+
+    public async Task<List<ServiceType>> GetAllAsync()
+    {
+        return await context.ServiceTypes.OrderBy(st => st.Id).ThenBy(st => st.Name).ToListAsync();
+    }
 }

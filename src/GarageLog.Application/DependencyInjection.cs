@@ -9,7 +9,9 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IVehicleService, VehicleService>();
+        services.AddScoped<IServiceTypeService, ServiceTypeService>();
         services.AddScoped<IServiceRecordService, ServiceRecordService>();
+
         return services;
     }
 }

@@ -4,7 +4,7 @@ public class ServiceRecordResponse
 {
     public int Id { get; set; }
 
-    public DateTime ServiceDate { get; set; }
+    public DateOnly ServiceDate { get; set; }
 
     public int Mileage { get; set; }
 

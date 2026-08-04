@@ -1,24 +1,51 @@
-import type { Route } from "../+types/root";
+import type { Route } from '../+types/root'
 
-import { useState } from "react";
-import { Link, Form, Outlet, redirect } from "react-router";
-import { AuthApi } from "~/lib/api/auth.server";
+import { useState } from 'react'
+import {
+    Link,
+    Form,
+    Outlet,
+    redirect,
+    useLoaderData,
+    useNavigation,
+} from 'react-router'
+import { AuthApi } from '~/lib/api/auth.server'
 
-import ThemeToggle from "~/components/ThemeToggle";
+import ThemeToggle from '~/components/ThemeToggle'
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const user = await AuthApi.getCurrentUser(request);
+    const user = await AuthApi.getCurrentUser(request)
 
-    if (!user) return redirect("/login");
+    if (!user) return redirect('/login')
 
-    return null;
+    return { user }
 }
 
 export default function ProtectedLayout() {
-    const [menuOpen, setMenuOpen] = useState(false);
+    const { user } = useLoaderData<typeof loader>()
+
+    const navigation = useNavigation()
+    const isSubmitting = navigation.state === 'submitting'
+
+    const [menuOpen, setMenuOpen] = useState(false)
 
     return (
         <div className="min-h-screen bg-background text-text">
+            {/* Global Submit Loading Overlay */}
+            {isSubmitting && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="rounded-xl border border-border bg-card px-8 py-6 shadow-lg">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+
+                            <p className="font-medium text-text">Saving...</p>
+
+                            <p className="text-sm text-muted">Please wait</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <nav className="border-b border-border bg-card">
                 <div className="flex h-16 items-center justify-between px-4">
                     {/* Brand */}
@@ -31,11 +58,15 @@ export default function ProtectedLayout() {
                     {/* Desktop Menu */}
                     <div className="hidden items-center gap-4 md:flex">
                         <span className="text-sm text-muted">
-                            userName#todo
+                            Welcome, {user.firstName}
                         </span>
 
                         <ThemeToggle />
-                        <Form method="post" action="/logout">
+
+                        <Form
+                            method="post"
+                            action="/logout"
+                        >
                             <button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
                                 Log out
                             </button>
@@ -44,12 +75,11 @@ export default function ProtectedLayout() {
 
                     {/* Mobile Actions */}
                     <div className="flex items-center gap-3 md:hidden">
-                        {/* Hamburger Button */}
                         <button
                             className="text-2xl text-muted"
                             onClick={() => setMenuOpen(!menuOpen)}
                         >
-                            {menuOpen ? "✕" : "☰"}
+                            {menuOpen ? '✕' : '☰'}
                         </button>
                     </div>
                 </div>
@@ -59,15 +89,22 @@ export default function ProtectedLayout() {
                     <div className="border-t border-border bg-card md:hidden">
                         <div className="flex flex-col items-start gap-4 p-4">
                             <span className="text-sm text-muted">
-                                userName#todo
+                                Welcome, {user.firstName}
                             </span>
 
-                            <Form method="post" action="/logout">
-                                <span className="text-sm text-muted">
-                                    Log out
-                                </span>
-                            </Form>
                             <ThemeToggle />
+
+                            <Form
+                                method="post"
+                                action="/logout"
+                            >
+                                <button
+                                    type="submit"
+                                    className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                                >
+                                    Log out
+                                </button>
+                            </Form>
                         </div>
                     </div>
                 )}
@@ -78,5 +115,5 @@ export default function ProtectedLayout() {
                 <Outlet />
             </main>
         </div>
-    );
+    )
 }

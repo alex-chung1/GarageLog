@@ -40,8 +40,8 @@ public static class DependencyInjection
 
         // Repositories
         services.AddScoped<IVehicleRepository, VehicleRepository>();
-        services.AddScoped<IServiceRecordRepository, ServiceRecordRepository>();
         services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
+        services.AddScoped<IServiceRecordRepository, ServiceRecordRepository>();
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

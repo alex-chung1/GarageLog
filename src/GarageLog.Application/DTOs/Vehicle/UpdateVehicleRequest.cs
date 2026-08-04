@@ -13,6 +13,4 @@ public class UpdateVehicleRequest
     public int Year { get; set; }
 
     public string? Vin { get; set; }
-
-    public int? Mileage { get; set; }
 }

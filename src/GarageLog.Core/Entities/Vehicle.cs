@@ -1,10 +1,10 @@
 using GarageLog.Core.Enums;
+using GarageLog.Core.Validation;
 
 namespace GarageLog.Core.Entities;
 
 public class Vehicle
 {
-    private const int MaxReasonableMileage = 5_000_000;
     private readonly List<ServiceRecord> _serviceRecords = [];
 
     // Properties
@@ -15,28 +15,25 @@ public class Vehicle
     public string Model { get; private set; } = string.Empty;
     public int Year { get; private set; }
     public string? Vin { get; private set; }
-    public int? CurrentMileage { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     // Navigation
     public IReadOnlyCollection<ServiceRecord> ServiceRecords => _serviceRecords.AsReadOnly();
 
-    // Default Constructor for EF Core
+    // Private constructor for EF Core
     private Vehicle() { }
 
-    // Constructor
-    public Vehicle(
+    // Private constructor used by factory method
+    private Vehicle(
         int userId,
         VehicleType type,
         string make,
         string model,
         int year,
-        string? vin = null,
-        int? currentMileage = null
+        string? vin = null
     )
     {
-        ValidateYear(year);
-        ValidateMileage(currentMileage);
+        VehicleValidationRules.ValidateYear(year);
 
         UserId = userId;
         Type = type;
@@ -44,24 +41,25 @@ public class Vehicle
         Model = model;
         Year = year;
         Vin = string.IsNullOrWhiteSpace(vin) ? null : vin;
-        CurrentMileage = currentMileage;
         CreatedAt = DateTime.UtcNow;
     }
 
-    // Domain behavior
-    public void UpdateDetails(VehicleType type, string make, string model, int year, string? vin)
+    // Factory method to create a new vehicle for user
+    public static Vehicle Create(
+        int userId,
+        VehicleType type,
+        string make,
+        string model,
+        int year,
+        string? vin = null
+    )
     {
-        ValidateYear(year);
-
-        Type = type;
-        Make = make;
-        Model = model;
-        Year = year;
-        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin;
+        return new Vehicle(userId, type, make, model, year, vin);
     }
 
+    // Adds a new service record to this vehicle
     public ServiceRecord AddServiceRecord(
-        DateTime serviceDate,
+        DateOnly serviceDate,
         int mileage,
         bool isSelfService,
         decimal? totalCost = null,
@@ -70,7 +68,7 @@ public class Vehicle
     )
     {
         var serviceRecord = new ServiceRecord(
-            Id,
+            this.Id,
             serviceDate,
             mileage,
             isSelfService,
@@ -84,40 +82,20 @@ public class Vehicle
         return serviceRecord;
     }
 
-    public void UpdateMileage(int newMileage)
+    public void UpdateDetails(VehicleType type, string make, string model, int year, string? vin)
     {
-        ValidateMileage(newMileage);
+        VehicleValidationRules.ValidateYear(year);
 
-        if (newMileage < CurrentMileage)
-        {
-            throw new InvalidOperationException("Mileage cannot decrease.");
-        }
-
-        CurrentMileage = newMileage;
-    }
-
-    private static void ValidateYear(int year)
-    {
-        if (year < 1886 || year > DateTime.UtcNow.Year + 1)
-        {
-            throw new ArgumentException("Year is not a valid vehicle year.", nameof(year));
-        }
-    }
-
-    private static void ValidateMileage(int? mileage)
-    {
-        if (mileage is < 0 or > MaxReasonableMileage)
-        {
-            throw new ArgumentException(
-                $"Mileage must be between 0 and {MaxReasonableMileage:N0}.",
-                nameof(mileage)
-            );
-        }
+        Type = type;
+        Make = make;
+        Model = model;
+        Year = year;
+        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin;
     }
 
     public void ValidateHistoricalMileage(int mileage, ServiceRecord? previous, ServiceRecord? next)
     {
-        ValidateMileage(mileage);
+        VehicleValidationRules.ValidateMileage(mileage);
 
         if (previous is not null && mileage < previous.Mileage)
         {

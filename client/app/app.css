@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
     --background: #f9fafb;
@@ -16,6 +16,10 @@
     --text: #f9fafb;
     --muted: #9ca3af;
     --primary: #3b82f6;
+}
+
+.dark input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 @theme {

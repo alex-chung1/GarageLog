@@ -1,4 +1,5 @@
 using GarageLog.Application.DTOs.Auth;
+using GarageLog.Application.Exceptions;
 using GarageLog.Application.Interfaces.Services;
 using GarageLog.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -21,9 +22,24 @@ public class AuthService(UserManager<ApplicationUser> userManager, ITokenService
         var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
-            throw new ArgumentException(
-                string.Join(", ", result.Errors.Select(e => e.Description))
-            );
+        {
+            var errors = result
+                .Errors.Select(e =>
+                    e.Code switch
+                    {
+                        "DuplicateEmail" => "An account with this email already exists.",
+
+                        "DuplicateUserName" => null,
+
+                        _ => e.Description,
+                    }
+                )
+                .Where(e => e != null)
+                .Cast<string>()
+                .ToList();
+
+            throw new ValidationException(errors);
+        }
 
         string token = tokenService.GenerateToken(
             user.Id,
@@ -47,12 +63,12 @@ public class AuthService(UserManager<ApplicationUser> userManager, ITokenService
         var user = await userManager.FindByEmailAsync(request.Email);
 
         if (user == null)
-            throw new UnauthorizedAccessException("Invalid credentials");
+            throw new UnauthorizedAccessException("Invalid email or password");
 
         bool isValidPassword = await userManager.CheckPasswordAsync(user, request.Password);
 
         if (!isValidPassword)
-            throw new UnauthorizedAccessException("Invalid credentials");
+            throw new UnauthorizedAccessException("Invalid email or password");
 
         string token = tokenService.GenerateToken(
             user.Id,

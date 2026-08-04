@@ -19,26 +19,29 @@ public class ServiceRecordService(
         CreateServiceRecordRequest request
     )
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
+        if (request.Items.Count == 0)
+            throw new InvalidOperationException(
+                "A service record must contain at least one service item."
+            );
+
+        var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
 
         if (vehicle is null)
-        {
             return null;
-        }
 
-        ServiceRecord? previous = await serviceRecordRepository.GetPreviousRecordAsync(
+        var previous = await serviceRecordRepository.GetPreviousRecordAsync(
             vehicle.Id,
             request.ServiceDate
         );
 
-        ServiceRecord? next = await serviceRecordRepository.GetNextRecordAsync(
+        var next = await serviceRecordRepository.GetNextRecordAsync(
             vehicle.Id,
             request.ServiceDate
         );
 
         vehicle.ValidateHistoricalMileage(request.Mileage, previous, next);
 
-        ServiceRecord serviceRecord = vehicle.AddServiceRecord(
+        var serviceRecord = vehicle.AddServiceRecord(
             request.ServiceDate,
             request.Mileage,
             request.IsSelfService,
@@ -47,28 +50,16 @@ public class ServiceRecordService(
             request.Notes
         );
 
-        foreach (CreateServiceRecordItemRequest itemRequest in request.Items)
+        foreach (var itemRequest in request.Items)
         {
-            ServiceType? serviceType = await serviceTypeRepository.GetByIdAsync(
-                itemRequest.ServiceTypeId
-            );
+            var serviceType = await serviceTypeRepository.GetByIdAsync(itemRequest.ServiceTypeId);
 
             if (serviceType is null)
-            {
                 throw new InvalidOperationException(
                     $"Service type {itemRequest.ServiceTypeId} not found."
                 );
-            }
 
-            serviceRecord.AddServiceItem(serviceType, itemRequest.Quantity, itemRequest.CustomName);
-        }
-
-        if (
-            next is null
-            && (vehicle.CurrentMileage is null || request.Mileage > vehicle.CurrentMileage)
-        )
-        {
-            vehicle.UpdateMileage(request.Mileage);
+            serviceRecord.AddServiceItem(serviceType, itemRequest.CustomName);
         }
 
         await unitOfWork.SaveChangesAsync();
@@ -82,57 +73,44 @@ public class ServiceRecordService(
         int userId
     )
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
+        var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
 
         if (vehicle is null)
-        {
             return null;
-        }
 
-        ServiceRecord? serviceRecord = await serviceRecordRepository.GetByIdAsync(
-            vehicle.Id,
-            serviceRecordId
-        );
+        var serviceRecord = await serviceRecordRepository.GetByIdAsync(vehicle.Id, serviceRecordId);
 
         return serviceRecord is null ? null : MapToResponse(serviceRecord);
     }
 
     public async Task<IEnumerable<ServiceRecordResponse>?> GetAllAsync(int vehicleId, int userId)
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
+        var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
 
         if (vehicle is null)
-        {
             return null;
-        }
 
-        IEnumerable<ServiceRecord> records = await serviceRecordRepository.GetAllByVehicleIdAsync(
-            vehicleId
-        );
+        var records = await serviceRecordRepository.GetAllByVehicleIdAsync(vehicleId);
 
         return records.Select(MapToResponse);
     }
 
     public async Task<bool> DeleteAsync(int vehicleId, int serviceRecordId, int userId)
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
+        var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
 
         if (vehicle is null)
-        {
             return false;
-        }
 
-        ServiceRecord? serviceRecord = await serviceRecordRepository.GetByIdAsync(
-            vehicleId,
-            serviceRecordId
-        );
+        var serviceRecord = await serviceRecordRepository.GetByIdAsync(vehicleId, serviceRecordId);
 
         if (serviceRecord is null)
-        {
             return false;
-        }
 
-        serviceRecordRepository.Delete(serviceRecord);
+        var latestRecord = await serviceRecordRepository.GetLatestRecordAsync(vehicleId);
+
+        if (latestRecord is not null && latestRecord.Id == serviceRecord.Id)
+            serviceRecordRepository.Delete(serviceRecord);
 
         await unitOfWork.SaveChangesAsync();
 
@@ -162,7 +140,6 @@ public class ServiceRecordService(
             Id = item.Id,
             ServiceTypeId = item.ServiceTypeId,
             ServiceTypeName = item.ServiceType.Name,
-            Quantity = item.Quantity,
             CustomName = item.CustomName,
         };
     }

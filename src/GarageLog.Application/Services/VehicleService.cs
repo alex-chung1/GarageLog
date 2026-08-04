@@ -11,14 +11,13 @@ public class VehicleService(IVehicleRepository vehicleRepository, IUnitOfWork un
 {
     public async Task<VehicleResponse> CreateVehicleAsync(CreateVehicleRequest request, int userId)
     {
-        Vehicle vehicle = new(
+        Vehicle vehicle = Vehicle.Create(
             userId,
             request.Type,
             request.Make,
             request.Model,
             request.Year,
-            request.Vin,
-            request.CurrentMileage
+            request.Vin
         );
 
         vehicleRepository.Add(vehicle);
@@ -30,16 +29,16 @@ public class VehicleService(IVehicleRepository vehicleRepository, IUnitOfWork un
 
     public async Task<VehicleResponse?> GetVehicleAsync(int id, int userId)
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(id, userId);
+        VehicleResponse? vehicle = await vehicleRepository.GetDetailsByIdAsync(id, userId);
 
-        return vehicle is null ? null : MapToResponse(vehicle);
+        return vehicle;
     }
 
     public async Task<IEnumerable<VehicleResponse>> GetVehiclesAsync(int userId)
     {
-        IEnumerable<Vehicle> vehicles = await vehicleRepository.GetAllByUserIdAsync(userId);
+        IEnumerable<VehicleResponse> vehicles = await vehicleRepository.GetAllByUserIdAsync(userId);
 
-        return vehicles.Select(MapToResponse);
+        return vehicles;
     }
 
     public async Task<VehicleResponse?> UpdateVehicleAsync(
@@ -88,7 +87,6 @@ public class VehicleService(IVehicleRepository vehicleRepository, IUnitOfWork un
             Model = vehicle.Model,
             Year = vehicle.Year,
             Vin = vehicle.Vin,
-            Mileage = vehicle.CurrentMileage,
             CreatedAt = vehicle.CreatedAt,
         };
     }

@@ -3,6 +3,7 @@ using System;
 using GarageLog.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GarageLog.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260730225540_AddVehicleDetailsAndServiceChanges")]
+    partial class AddVehicleDetailsAndServiceChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,8 +50,8 @@ namespace GarageLog.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("notes");
 
-                    b.Property<DateOnly>("ServiceDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("ServiceDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("service_date");
 
                     b.Property<string>("ShopName")
