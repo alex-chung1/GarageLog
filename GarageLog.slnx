@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GarageLog.API/GarageLog.API.csproj" />
+    <Project Path="src/GarageLog.Application/GarageLog.Application.csproj" />
+    <Project Path="src/GarageLog.Core/GarageLog.Core.csproj" />
+    <Project Path="src/GarageLog.Infrastructure/GarageLog.Infrastructure.csproj" />
+  </Folder>
+</Solution>
