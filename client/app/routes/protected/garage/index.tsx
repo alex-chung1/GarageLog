@@ -1,4 +1,4 @@
-import type { Route } from './+types'
+import type { Route } from './+types/index'
 import type { VehicleResponse } from '~/types/vehicle'
 
 import { Link, useLoaderData } from 'react-router'
@@ -8,10 +8,7 @@ import { getErrorMessage } from '~/lib/errors'
 import VehicleCard from '~/components/VehicleCard'
 
 export function meta({}: Route.MetaArgs) {
-    return [
-        { title: 'GarageLog' },
-        { name: 'description', content: 'Manage your vehicles' },
-    ]
+    return [{ title: 'GarageLog' }, { name: 'description', content: 'Manage your vehicles' }]
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -41,9 +38,7 @@ export default function Garage() {
             {/* Header */}
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-primary">
-                        My Vehicles
-                    </h1>
+                    <h1 className="text-3xl font-bold text-primary">My Vehicles</h1>
 
                     <p className="mt-1 text-muted">Manage your vehicles</p>
                 </div>
@@ -58,9 +53,7 @@ export default function Garage() {
 
             {/* Error */}
             {error && (
-                <div className="mb-6 rounded-lg bg-red-950 p-3 text-sm text-red-300">
-                    {error}
-                </div>
+                <div className="mb-6 rounded-lg bg-red-950 p-3 text-sm text-red-300">{error}</div>
             )}
 
             {/* Empty State */}

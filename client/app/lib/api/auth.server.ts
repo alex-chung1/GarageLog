@@ -1,40 +1,27 @@
-import type { LoginRequest, RegisterRequest } from "~/types/auth";
+import type { LoginRequest, RegisterRequest } from '~/types/auth'
 
-import { apiFetch } from "./client.server";
+import { apiFetch } from './client.server'
 
 export const AuthApi = {
-    login(data: LoginRequest) {
-        return apiFetch("/auth/login", {
-            method: "POST",
+    login(data: LoginRequest): Promise<Response> {
+        return apiFetch('/auth/login', {
+            method: 'POST',
             body: JSON.stringify(data),
-        });
+        })
     },
 
-    register(data: RegisterRequest) {
-        return apiFetch("/auth/register", {
-            method: "POST",
+    register(data: RegisterRequest): Promise<Response> {
+        return apiFetch('/auth/register', {
+            method: 'POST',
             body: JSON.stringify(data),
-        });
+        })
     },
 
-    async getCurrentUser(request: Request) {
-        const cookie = request.headers.get("Cookie");
+    getCurrentUser(request: Request): Promise<Response> {
+        const cookie = request.headers.get('Cookie')
 
-        try {
-            const response = await apiFetch("/auth/me", {
-                headers: {
-                    Cookie: cookie ?? "",
-                },
-            });
-
-            if (!response.ok) {
-                return null;
-            }
-
-            return response.json();
-        } catch (error) {
-            console.error("getCurrentUser failed:", error);
-            return null;
-        }
+        return apiFetch('/auth/me', {
+            headers: { Cookie: cookie ?? '' },
+        })
     },
-};
+}

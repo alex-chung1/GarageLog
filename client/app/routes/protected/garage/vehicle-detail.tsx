@@ -1,6 +1,6 @@
 import type { Route } from './+types/vehicle-detail'
 import type { VehicleResponse } from '~/types/vehicle'
-import type { ServiceRecord } from '~/types/serviceRecord'
+import type { ServiceRecordResponse } from '~/types/serviceRecord'
 
 import { Link, useLoaderData } from 'react-router'
 import { VehiclesApi } from '~/lib/api/vehicle.server'
@@ -35,7 +35,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
 
     const vehicle: VehicleResponse = await vehicleResponse.json()
-    const records: ServiceRecord[] = await recordsResponse.json()
+    const records: ServiceRecordResponse[] = await recordsResponse.json()
 
     return {
         vehicle,
@@ -56,13 +56,9 @@ export default function VehicleDetail() {
         <div>
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-primary">
-                    Service History
-                </h1>
+                <h1 className="text-3xl font-bold text-primary">Service History</h1>
 
-                <p className="mt-1 text-muted">
-                    Track maintenance and repairs for this vehicle
-                </p>
+                <p className="mt-1 text-muted">Track maintenance and repairs for this vehicle</p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
@@ -99,14 +95,11 @@ export default function VehicleDetail() {
                                             </div>
 
                                             <h2 className="text-xl font-bold text-text">
-                                                {formatServiceDate(
-                                                    record.serviceDate,
-                                                )}
+                                                {formatServiceDate(record.serviceDate)}
                                             </h2>
 
                                             <p className="mt-1 text-sm text-muted">
-                                                {record.mileage.toLocaleString()}{' '}
-                                                miles
+                                                {record.mileage.toLocaleString()} miles
                                             </p>
                                         </div>
 
@@ -125,16 +118,13 @@ export default function VehicleDetail() {
                                             </span>{' '}
                                             {record.isSelfService
                                                 ? 'Self Service'
-                                                : (record.shopName ??
-                                                  'Unknown Shop')}
+                                                : (record.shopName ?? 'Unknown Shop')}
                                         </p>
                                     </div>
 
                                     {/* Services */}
                                     <div className="mt-5">
-                                        <h3 className="font-semibold text-text">
-                                            Services
-                                        </h3>
+                                        <h3 className="font-semibold text-text">Services</h3>
 
                                         <ul className="mt-2 space-y-1 text-sm text-muted">
                                             {record.items.map((item) => (
@@ -142,14 +132,9 @@ export default function VehicleDetail() {
                                                     key={item.id}
                                                     className="flex items-center gap-2"
                                                 >
-                                                    <span className="text-primary">
-                                                        •
-                                                    </span>
+                                                    <span className="text-primary">•</span>
 
                                                     {item.serviceTypeName}
-
-                                                    {item.quantity > 1 &&
-                                                        ` x${item.quantity}`}
                                                 </li>
                                             ))}
                                         </ul>

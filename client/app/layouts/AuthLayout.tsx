@@ -1,16 +1,20 @@
-import type { Route } from "../+types/root";
+import type { Route } from '../+types/root'
 
-import { Outlet, redirect } from "react-router";
-import { AuthApi } from "~/lib/api/auth.server";
+import { Outlet, redirect } from 'react-router'
+import { AuthApi } from '~/lib/api/auth.server'
 
-import ThemeToggle from "~/components/ThemeToggle";
+import ThemeToggle from '~/components/ThemeToggle'
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const user = await AuthApi.getCurrentUser(request);
+    try {
+        const response = await AuthApi.getCurrentUser(request)
 
-    if (user) return redirect("/");
+        if (response.ok) return redirect('/')
 
-    return null;
+        return null
+    } catch {
+        return null
+    }
 }
 
 export default function AuthLayout() {
@@ -22,5 +26,5 @@ export default function AuthLayout() {
 
             <Outlet />
         </div>
-    );
+    )
 }

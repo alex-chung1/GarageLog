@@ -60,9 +60,7 @@ export async function action({ request, params }: Route.ActionArgs) {
         mileage: Number(formData.get('mileage')?.toString().replace(/,/g, '')),
         isSelfService: formData.get('provider') === 'DIY',
         shopName: formData.get('shopName')?.toString() || null,
-        totalCost: formData.get('totalCost')
-            ? Number(formData.get('totalCost'))
-            : null,
+        totalCost: formData.get('totalCost') ? Number(formData.get('totalCost')) : null,
         notes: formData.get('notes')?.toString() || null,
         items,
     }
@@ -97,9 +95,7 @@ export default function ServiceRecordCreate() {
 
     const isSubmitting = navigation.state === 'submitting'
 
-    const [selectedServices, setSelectedServices] = useState<SelectedService[]>(
-        [],
-    )
+    const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
 
     const [isDIY, setIsDIY] = useState(true)
 
@@ -110,13 +106,9 @@ export default function ServiceRecordCreate() {
         <div>
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-primary">
-                    Add Service Record
-                </h1>
+                <h1 className="text-3xl font-bold text-primary">Add Service Record</h1>
 
-                <p className="mt-1 text-muted">
-                    Record maintenance performed on your vehicle.
-                </p>
+                <p className="mt-1 text-muted">Record maintenance performed on your vehicle.</p>
             </div>
 
             {actionData?.error && (
@@ -143,9 +135,7 @@ export default function ServiceRecordCreate() {
 
                 {/* Service Details */}
                 <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                    <h2 className="mb-4 text-xl font-semibold text-text">
-                        Service Details
-                    </h2>
+                    <h2 className="mb-4 text-xl font-semibold text-text">Service Details</h2>
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <div>
@@ -156,9 +146,7 @@ export default function ServiceRecordCreate() {
                             <input
                                 name="serviceDate"
                                 type="date"
-                                defaultValue={
-                                    new Date().toISOString().split('T')[0]
-                                }
+                                defaultValue={new Date().toISOString().split('T')[0]}
                                 max={new Date().toISOString().split('T')[0]}
                                 required
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-text"
@@ -177,17 +165,10 @@ export default function ServiceRecordCreate() {
                                 required
                                 value={mileage}
                                 onChange={(e) => {
-                                    const value = e.target.value.replace(
-                                        /,/g,
-                                        '',
-                                    )
+                                    const value = e.target.value.replace(/,/g, '')
 
                                     if (/^\d*$/.test(value)) {
-                                        setMileage(
-                                            value
-                                                ? Number(value).toLocaleString()
-                                                : '',
-                                        )
+                                        setMileage(value ? Number(value).toLocaleString() : '')
                                     }
                                 }}
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-text"
@@ -198,9 +179,7 @@ export default function ServiceRecordCreate() {
 
                 {/* Provider */}
                 <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                    <h2 className="mb-4 text-xl font-semibold text-text">
-                        Performed By
-                    </h2>
+                    <h2 className="mb-4 text-xl font-semibold text-text">Performed By</h2>
 
                     <div className="space-y-3">
                         <label className="flex items-center gap-2 text-text">
@@ -243,9 +222,7 @@ export default function ServiceRecordCreate() {
 
                 {/* Cost */}
                 <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                    <h2 className="mb-4 text-xl font-semibold text-text">
-                        Cost
-                    </h2>
+                    <h2 className="mb-4 text-xl font-semibold text-text">Cost</h2>
 
                     <input
                         name="totalCost"
@@ -271,9 +248,7 @@ export default function ServiceRecordCreate() {
 
                 {/* Notes */}
                 <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                    <h2 className="mb-4 text-xl font-semibold text-text">
-                        Notes
-                    </h2>
+                    <h2 className="mb-4 text-xl font-semibold text-text">Notes</h2>
 
                     <textarea
                         name="notes"
@@ -289,9 +264,7 @@ export default function ServiceRecordCreate() {
                         to={`/garage/vehicle/${vehicleId}`}
                         aria-disabled={isSubmitting}
                         className={`rounded-lg border border-border px-5 py-2 font-medium text-text ${
-                            isSubmitting
-                                ? 'pointer-events-none cursor-not-allowed opacity-50'
-                                : ''
+                            isSubmitting ? 'pointer-events-none cursor-not-allowed opacity-50' : ''
                         }`}
                     >
                         Cancel

@@ -1,24 +1,24 @@
 import type { Route } from '../+types/root'
+import type { UserResponse } from '~/types/auth'
 
 import { useState } from 'react'
-import {
-    Link,
-    Form,
-    Outlet,
-    redirect,
-    useLoaderData,
-    useNavigation,
-} from 'react-router'
+import { Link, Form, Outlet, redirect, useLoaderData, useNavigation } from 'react-router'
 import { AuthApi } from '~/lib/api/auth.server'
 
 import ThemeToggle from '~/components/ThemeToggle'
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const user = await AuthApi.getCurrentUser(request)
+    try {
+        const response = await AuthApi.getCurrentUser(request)
 
-    if (!user) return redirect('/login')
+        if (!response.ok) return redirect('/login')
 
-    return { user }
+        const user: UserResponse = await response.json()
+
+        return { user }
+    } catch {
+        return redirect('/login')
+    }
 }
 
 export default function ProtectedLayout() {
@@ -50,16 +50,12 @@ export default function ProtectedLayout() {
                 <div className="flex h-16 items-center justify-between px-4">
                     {/* Brand */}
                     <Link to="/">
-                        <h1 className="text-xl font-bold text-primary">
-                            GarageLog
-                        </h1>
+                        <h1 className="text-xl font-bold text-primary">GarageLog</h1>
                     </Link>
 
                     {/* Desktop Menu */}
                     <div className="hidden items-center gap-4 md:flex">
-                        <span className="text-sm text-muted">
-                            Welcome, {user.firstName}
-                        </span>
+                        <span className="text-sm text-muted">Welcome, {user.firstName}</span>
 
                         <ThemeToggle />
 
@@ -88,9 +84,7 @@ export default function ProtectedLayout() {
                 {menuOpen && (
                     <div className="border-t border-border bg-card md:hidden">
                         <div className="flex flex-col items-start gap-4 p-4">
-                            <span className="text-sm text-muted">
-                                Welcome, {user.firstName}
-                            </span>
+                            <span className="text-sm text-muted">Welcome, {user.firstName}</span>
 
                             <ThemeToggle />
 
