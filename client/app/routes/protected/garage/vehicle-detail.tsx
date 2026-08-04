@@ -1,31 +1,31 @@
-import type { Route } from './+types/vehicle-detail'
-import type { ServiceRecord } from '~/types/serviceRecord'
+import type { Route } from "./+types/vehicle-detail";
+import type { ServiceRecord } from "~/types/serviceRecord";
 
-import { useLoaderData } from 'react-router'
-import { ServiceRecordsApi } from '~/lib/api/service-record.server'
+import { useLoaderData } from "react-router";
+import { ServiceRecordsApi } from "~/lib/api/service-record.server";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-    const vehicleId = params.vehicleId
+    const vehicleId = params.vehicleId;
 
     if (!vehicleId) {
-        throw new Response('Not Found', { status: 404 })
+        throw new Response("Not Found", { status: 404 });
     }
 
-    const response = await ServiceRecordsApi.getAll(request, Number(vehicleId))
+    const response = await ServiceRecordsApi.getAll(request, Number(vehicleId));
 
     if (!response.ok) {
-        throw new Response('Failed to load service records', {
+        throw new Response("Failed to load service records", {
             status: response.status,
-        })
+        });
     }
 
-    const records: ServiceRecord[] = await response.json()
+    const records: ServiceRecord[] = await response.json();
 
-    return { records }
+    return { records };
 }
 
 export default function VehicleDetail() {
-    const { records } = useLoaderData<typeof loader>()
+    const { records } = useLoaderData<typeof loader>();
 
     return (
         <div>
@@ -67,7 +67,7 @@ export default function VehicleDetail() {
                                         </h2>
 
                                         <p className="mt-1 text-sm text-muted">
-                                            {record.mileage.toLocaleString()}{' '}
+                                            {record.mileage.toLocaleString()}{" "}
                                             miles
                                         </p>
                                     </div>
@@ -84,11 +84,11 @@ export default function VehicleDetail() {
                                     <p>
                                         <span className="font-medium text-text">
                                             Performed By:
-                                        </span>{' '}
+                                        </span>{" "}
                                         {record.isSelfService
-                                            ? 'Self Service'
+                                            ? "Self Service"
                                             : (record.shopName ??
-                                              'Unknown Shop')}
+                                              "Unknown Shop")}
                                     </p>
                                 </div>
 
@@ -129,5 +129,5 @@ export default function VehicleDetail() {
                 </div>
             )}
         </div>
-    )
+    );
 }

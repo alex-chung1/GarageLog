@@ -1,42 +1,42 @@
 // app/routes/login.tsx
 
-import type { Route } from '../+types'
-import type { LoginRequest } from '~/types/auth'
+import type { Route } from "../+types";
+import type { LoginRequest } from "~/types/auth";
 
-import { Form, Link, useActionData, redirect } from 'react-router'
-import { useState } from 'react'
-import { AuthApi } from '~/lib/api/auth.server'
-import { copySetCookieHeaders } from '~/lib/api/headers.server'
-import { getErrorMessage } from '~/lib/errors'
+import { Form, Link, useActionData, redirect } from "react-router";
+import { useState } from "react";
+import { AuthApi } from "~/lib/api/auth.server";
+import { copySetCookieHeaders } from "~/lib/api/headers.server";
+import { getErrorMessage } from "~/lib/errors";
 
 export async function action({ request }: Route.ActionArgs) {
-    const formData = await request.formData()
+    const formData = await request.formData();
 
     const loginRequest: LoginRequest = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-    }
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+    };
 
     try {
-        const response = await AuthApi.login(loginRequest)
+        const response = await AuthApi.login(loginRequest);
 
         if (!response.ok) {
-            return { error: 'Invalid email or password' }
+            return { error: "Invalid email or password" };
         }
 
-        return redirect('/', {
+        return redirect("/", {
             headers: copySetCookieHeaders(response),
-        })
+        });
     } catch (error) {
         return {
             error: getErrorMessage(error),
-        }
+        };
     }
 }
 
 export default function Login() {
-    const actionData = useActionData<typeof action>()
-    const [showPassword, setShowPassword] = useState(false)
+    const actionData = useActionData<typeof action>();
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
@@ -46,7 +46,7 @@ export default function Login() {
                 </h1>
 
                 <p className="mb-6 text-center text-sm text-muted">
-                    Don't have an account?{' '}
+                    Don't have an account?{" "}
                     <Link
                         to="/register"
                         className="text-primary hover:underline"
@@ -61,10 +61,7 @@ export default function Login() {
                     </div>
                 )}
 
-                <Form
-                    method="post"
-                    className="space-y-4"
-                >
+                <Form method="post" className="space-y-4">
                     <div>
                         <label
                             htmlFor="email"
@@ -95,7 +92,7 @@ export default function Login() {
                             <input
                                 id="password"
                                 name="password"
-                                type={showPassword ? 'text' : 'password'}
+                                type={showPassword ? "text" : "password"}
                                 placeholder="Your password"
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 pr-20 text-text placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                                 required
@@ -106,7 +103,7 @@ export default function Login() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-primary hover:underline"
                             >
-                                {showPassword ? 'Hide' : 'Show'}
+                                {showPassword ? "Hide" : "Show"}
                             </button>
                         </div>
                     </div>
@@ -120,5 +117,5 @@ export default function Login() {
                 </Form>
             </div>
         </div>
-    )
+    );
 }

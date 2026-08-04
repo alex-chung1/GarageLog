@@ -1,12 +1,12 @@
-import { apiFetch } from './client.server'
+import { apiFetch } from "./client.server";
 
 export const VehiclesApi = {
     getAll(request: Request) {
-        const cookie = request.headers.get('Cookie')
+        const cookie = request.headers.get("Cookie");
 
-        return apiFetch('/vehicles', {
-            method: 'GET',
-            headers: { Cookie: cookie ?? '' },
-        })
+        return apiFetch("/vehicles", {
+            method: "GET",
+            headers: { Cookie: cookie ?? "" },
+        });
     },
-}
+};
