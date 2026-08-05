@@ -4,6 +4,10 @@
 **/bin/
 **/obj/
 
+# Build outputs
+*.dll
+*.pdb
+
 # User-specific files
 *.user
 *.suo
@@ -29,6 +33,12 @@ client/.vite/
 client/.react-router/
 client/build/
 
+# Package manager files (optional)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
 
 # ======================
 # Environment files
@@ -47,6 +57,9 @@ client/.env.*
 # ======================
 .vscode/
 
+# CSharpier cache (if you add it later)
+.csharpier/
+
 
 # ======================
 # OS files
@@ -59,12 +72,11 @@ Thumbs.db
 # Logs
 # ======================
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 
 # ======================
 # Test / Coverage
 # ======================
 coverage/
+TestResults/
+*.trx
