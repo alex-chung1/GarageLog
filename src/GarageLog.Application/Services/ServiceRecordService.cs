@@ -95,6 +95,67 @@ public class ServiceRecordService(
         return records.Select(MapToResponse);
     }
 
+    public async Task<ServiceRecordResponse?> UpdateAsync(
+        int vehicleId,
+        int serviceRecordId,
+        int userId,
+        UpdateServiceRecordRequest request
+    )
+    {
+        var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
+
+        if (vehicle is null)
+            return null;
+
+        var serviceRecord = await serviceRecordRepository.GetByIdAsync(vehicleId, serviceRecordId);
+
+        if (serviceRecord is null)
+            return null;
+
+        var previous = await serviceRecordRepository.GetPreviousRecordAsync(
+            vehicle.Id,
+            request.ServiceDate,
+            excludeId: serviceRecord.Id
+        );
+
+        var next = await serviceRecordRepository.GetNextRecordAsync(
+            vehicle.Id,
+            request.ServiceDate,
+            excludeId: serviceRecord.Id
+        );
+
+        vehicle.ValidateHistoricalMileage(request.Mileage, previous, next);
+
+        serviceRecord.UpdateDetails(
+            request.ServiceDate,
+            request.Mileage,
+            request.IsSelfService,
+            request.TotalCost,
+            request.ShopName,
+            request.Notes
+        );
+
+        var newItems = new List<(ServiceType ServiceType, string? CustomName)>();
+
+        foreach (var itemRequest in request.Items)
+        {
+            var serviceType = await serviceTypeRepository.GetByIdAsync(itemRequest.ServiceTypeId);
+
+            if (serviceType is null)
+                throw new InvalidOperationException(
+                    $"Service type {itemRequest.ServiceTypeId} not found."
+                );
+
+            newItems.Add((serviceType, itemRequest.CustomName));
+        }
+
+        serviceRecord.ReplaceItems(newItems);
+
+        await unitOfWork.SaveChangesAsync();
+
+        return MapToResponse(serviceRecord);
+    }
+
     public async Task<bool> DeleteAsync(int vehicleId, int serviceRecordId, int userId)
     {
         var vehicle = await vehicleRepository.GetByIdAsync(vehicleId, userId);
@@ -107,11 +168,7 @@ public class ServiceRecordService(
         if (serviceRecord is null)
             return false;
 
-        var latestRecord = await serviceRecordRepository.GetLatestRecordAsync(vehicleId);
-
-        if (latestRecord is not null && latestRecord.Id == serviceRecord.Id)
-            serviceRecordRepository.Delete(serviceRecord);
-
+        serviceRecordRepository.Delete(serviceRecord);
         await unitOfWork.SaveChangesAsync();
 
         return true;

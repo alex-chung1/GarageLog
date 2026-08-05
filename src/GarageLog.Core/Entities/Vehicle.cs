@@ -33,6 +33,7 @@ public class Vehicle
         string? vin = null
     )
     {
+        VehicleValidationRules.ValidateMakeModel(make, model);
         VehicleValidationRules.ValidateYear(year);
 
         UserId = userId;
@@ -84,6 +85,7 @@ public class Vehicle
 
     public void UpdateDetails(VehicleType type, string make, string model, int year, string? vin)
     {
+        VehicleValidationRules.ValidateMakeModel(make, model);
         VehicleValidationRules.ValidateYear(year);
 
         Type = type;

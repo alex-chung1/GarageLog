@@ -27,10 +27,19 @@ export default [
         // /garage/vehicle/:vehicleId
         route('garage/vehicle/:vehicleId', './routes/protected/garage/vehicle-detail.tsx'),
 
+        // /garage/vehicle/:vehicleId/edit
+        route('garage/vehicle/:vehicleId/edit', './routes/protected/garage/vehicle-edit.tsx'),
+
         // /garage/vehicle/:vehicleId/service-record/new
         route(
             'garage/vehicle/:vehicleId/service-record/new',
             './routes/protected/garage/service-record-create.tsx',
+        ),
+
+        // /garage/vehicle/:vehicleId/service-record/:serviceRecordId/edit
+        route(
+            'garage/vehicle/:vehicleId/service-record/:serviceRecordId/edit',
+            './routes/protected/garage/service-record-edit.tsx',
         ),
     ]),
 ] satisfies RouteConfig

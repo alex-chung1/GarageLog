@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GarageLog.Application.DTOs.ServiceRecord;
 
-public class CreateServiceRecordRequest
+public class UpdateServiceRecordRequest
 {
     [Required]
     public DateOnly ServiceDate { get; set; }

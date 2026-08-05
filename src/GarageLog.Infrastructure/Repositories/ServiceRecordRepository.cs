@@ -25,19 +25,29 @@ public class ServiceRecordRepository(AppDbContext context) : IServiceRecordRepos
             .ToListAsync();
     }
 
-    public async Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateOnly serviceDate)
+    public async Task<ServiceRecord?> GetPreviousRecordAsync(
+        int vehicleId,
+        DateOnly serviceDate,
+        int? excludeId = null
+    )
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate < serviceDate)
+            .Where(sr => excludeId == null || sr.Id != excludeId)
             .OrderByDescending(sr => sr.ServiceDate)
             .ThenByDescending(sr => sr.Id)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateOnly serviceDate)
+    public async Task<ServiceRecord?> GetNextRecordAsync(
+        int vehicleId,
+        DateOnly serviceDate,
+        int? excludeId = null
+    )
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate > serviceDate)
+            .Where(sr => excludeId == null || sr.Id != excludeId)
             .OrderBy(sr => sr.ServiceDate)
             .ThenBy(sr => sr.Id)
             .FirstOrDefaultAsync();

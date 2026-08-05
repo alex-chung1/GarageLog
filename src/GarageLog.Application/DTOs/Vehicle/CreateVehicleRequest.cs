@@ -6,6 +6,7 @@ namespace GarageLog.Application.DTOs.Vehicle;
 public class CreateVehicleRequest
 {
     [Required]
+    [EnumDataType(typeof(VehicleType))]
     public VehicleType Type { get; set; }
 
     [Required]

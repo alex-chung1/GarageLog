@@ -22,4 +22,13 @@ public static class VehicleValidationRules
             );
         }
     }
+
+    public static void ValidateMakeModel(string make, string model)
+    {
+        if (string.IsNullOrWhiteSpace(make))
+            throw new ArgumentException("Make is required.");
+
+        if (string.IsNullOrWhiteSpace(model))
+            throw new ArgumentException("Model is required.");
+    }
 }

@@ -36,27 +36,11 @@ public class ServiceRecord
     )
     {
         VehicleValidationRules.ValidateMileage(mileage);
+        ServiceRecordValidationRules.ValidateServiceDate(serviceDate);
+        ServiceRecordValidationRules.ValidateTotalCost(totalCost);
 
-        shopName =
-            isSelfService ? null
-            : string.IsNullOrWhiteSpace(shopName) ? null
-            : shopName.Trim();
-
+        shopName = ServiceRecordValidationRules.NormalizeShopName(isSelfService, shopName);
         notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
-
-        if (serviceDate > DateOnly.FromDateTime(DateTime.UtcNow))
-            throw new ArgumentException("Service date cannot be in the future.");
-
-        if (totalCost is < 0)
-            throw new ArgumentException("Total cost cannot be negative.");
-
-        if (!isSelfService && shopName is null)
-        {
-            throw new ArgumentException(
-                "Shop name is required for non-self-service records.",
-                nameof(shopName)
-            );
-        }
 
         VehicleId = vehicleId;
         ServiceDate = serviceDate;
@@ -68,7 +52,7 @@ public class ServiceRecord
         CreatedAt = DateTime.UtcNow;
     }
 
-    // Behavior
+    // Adds a new service items to this service record
     public ServiceRecordItem AddServiceItem(ServiceType serviceType, string? customName = null)
     {
         var item = new ServiceRecordItem(serviceType, customName);
@@ -76,5 +60,36 @@ public class ServiceRecord
         _items.Add(item);
 
         return item;
+    }
+
+    public void UpdateDetails(
+        DateOnly serviceDate,
+        int mileage,
+        bool isSelfService,
+        decimal? totalCost,
+        string? shopName,
+        string? notes
+    )
+    {
+        VehicleValidationRules.ValidateMileage(mileage);
+        ServiceRecordValidationRules.ValidateServiceDate(serviceDate);
+        ServiceRecordValidationRules.ValidateTotalCost(totalCost);
+
+        ServiceDate = serviceDate;
+        Mileage = mileage;
+        IsSelfService = isSelfService;
+        ShopName = ServiceRecordValidationRules.NormalizeShopName(isSelfService, shopName);
+        TotalCost = totalCost;
+        Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
+    }
+
+    public void ReplaceItems(IEnumerable<(ServiceType ServiceType, string? CustomName)> items)
+    {
+        _items.Clear();
+
+        foreach (var (serviceType, customName) in items)
+        {
+            _items.Add(new ServiceRecordItem(serviceType, customName));
+        }
     }
 }

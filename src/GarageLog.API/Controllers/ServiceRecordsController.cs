@@ -74,6 +74,28 @@ public class ServiceRecordsController(IServiceRecordService serviceRecordService
         );
     }
 
+    [HttpPut("{serviceRecordId:int}")]
+    public async Task<IActionResult> UpdateServiceRecord(
+        int vehicleId,
+        int serviceRecordId,
+        UpdateServiceRecordRequest request
+    )
+    {
+        int userId = this.GetUserId();
+
+        ServiceRecordResponse? record = await serviceRecordService.UpdateAsync(
+            vehicleId,
+            serviceRecordId,
+            userId,
+            request
+        );
+
+        if (record is null)
+            return NotFound();
+
+        return Ok(record);
+    }
+
     [HttpDelete("{serviceRecordId:int}")]
     public async Task<IActionResult> DeleteServiceRecord(int vehicleId, int serviceRecordId)
     {

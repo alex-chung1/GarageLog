@@ -4,11 +4,16 @@ import { useState } from 'react'
 
 type ServiceSelectorProps = {
     serviceTypes: ServiceType[]
+    initialServices?: SelectedService[]
     onChange: (services: SelectedService[]) => void
 }
 
-export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelectorProps) {
-    const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
+export default function ServiceSelector({
+    serviceTypes,
+    initialServices = [],
+    onChange,
+}: ServiceSelectorProps) {
+    const [selectedServices, setSelectedServices] = useState<SelectedService[]>(initialServices)
 
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false)
@@ -45,9 +50,15 @@ export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelec
         setShowSearch(false)
     }
 
-    function removeService(serviceTypeId: number) {
+    function removeService(target: SelectedService) {
         updateSelected(
-            selectedServices.filter((service) => service.serviceTypeId !== serviceTypeId),
+            selectedServices.filter(
+                (service) =>
+                    !(
+                        service.serviceTypeId === target.serviceTypeId &&
+                        service.customName === target.customName
+                    ),
+            ),
         )
     }
 
@@ -123,12 +134,12 @@ export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelec
                                     (selected) => selected.serviceTypeId === service.id,
                                 )}
                                 onChange={() => {
-                                    const exists = selectedServices.some(
+                                    const existing = selectedServices.find(
                                         (selected) => selected.serviceTypeId === service.id,
                                     )
 
-                                    if (exists) {
-                                        removeService(service.id)
+                                    if (existing) {
+                                        removeService(existing)
                                     } else {
                                         addService(service)
                                     }
@@ -153,14 +164,14 @@ export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelec
                                 .filter((service) => service.serviceTypeId !== 9999)
                                 .map((service) => (
                                     <div
-                                        key={`${service.serviceTypeId}-${service.name}`}
+                                        key={service.serviceTypeId}
                                         className="flex items-center justify-between rounded-lg bg-background px-3 py-2 text-sm"
                                     >
                                         <span className="text-text">{service.name}</span>
 
                                         <button
                                             type="button"
-                                            onClick={() => removeService(service.serviceTypeId)}
+                                            onClick={() => removeService(service)}
                                             className="text-muted hover:text-text"
                                         >
                                             ✕
@@ -180,18 +191,18 @@ export default function ServiceSelector({ serviceTypes, onChange }: ServiceSelec
                             <div className="space-y-2">
                                 {selectedServices
                                     .filter((service) => service.serviceTypeId === 9999)
-                                    .map((service) => (
+                                    .map((service, index) => (
                                         <div
-                                            key={`${service.serviceTypeId}-${service.name}`}
+                                            key={`${service.serviceTypeId}-${service.customName}-${index}`}
                                             className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm"
                                         >
                                             <span className="font-medium text-primary">
-                                                {service.name}
+                                                {service.customName}
                                             </span>
 
                                             <button
                                                 type="button"
-                                                onClick={() => removeService(service.serviceTypeId)}
+                                                onClick={() => removeService(service)}
                                                 className="text-muted hover:text-text"
                                             >
                                                 ✕

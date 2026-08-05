@@ -47,12 +47,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function VehicleDetail() {
     const { vehicle, records } = useLoaderData<typeof loader>()
 
-    function formatServiceDate(date: string) {
-        const [year, month, day] = date.split('-')
-
-        return `${month}/${day}/${year}`
-    }
-
     return (
         <div>
             {/* Header */}
@@ -67,12 +61,21 @@ export default function VehicleDetail() {
                 <aside>
                     <VehicleCard vehicle={vehicle} />
 
-                    <Link
-                        to={`/garage/vehicle/${vehicle.id}/service-record/new`}
-                        className="mt-4 block w-full rounded-lg bg-primary px-4 py-2 text-center font-medium text-white transition hover:opacity-90"
-                    >
-                        + Add Service Record
-                    </Link>
+                    <div className="mt-4 flex gap-3">
+                        <Link
+                            to={`/garage/vehicle/${vehicle.id}/edit`}
+                            className="flex flex-1 items-center justify-center rounded-lg border border-border px-4 py-2 text-center font-medium text-text transition hover:bg-background"
+                        >
+                            Edit Vehicle
+                        </Link>
+
+                        <Link
+                            to={`/garage/vehicle/${vehicle.id}/service-record/new`}
+                            className="flex-1 rounded-lg bg-primary px-4 py-2 text-center font-medium text-white transition hover:opacity-90"
+                        >
+                            + Add Service Record
+                        </Link>
+                    </div>
                 </aside>
 
                 {/* Service Records */}
@@ -85,6 +88,7 @@ export default function VehicleDetail() {
                         records.map((record) => (
                             <ServiceRecordCard
                                 record={record}
+                                vehicleId={vehicle.id}
                                 key={record.id}
                             />
                         ))

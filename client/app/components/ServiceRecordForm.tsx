@@ -1,4 +1,5 @@
 import type { ServiceType, SelectedService } from '~/types/serviceType'
+import type { ServiceRecordResponse } from '~/types/serviceRecord'
 
 import { Form, Link, useNavigation } from 'react-router'
 import { useState } from 'react'
@@ -9,27 +10,36 @@ import FormSection from '~/components/FormSection'
 export default function ServiceRecordForm({
     vehicleId,
     serviceTypes,
+    record,
     error,
 }: {
     vehicleId: string
     serviceTypes: ServiceType[]
+    record?: ServiceRecordResponse
     error?: string
 }) {
     const navigation = useNavigation()
-
     const isSubmitting = navigation.state === 'submitting'
+    const isEditing = !!record
 
-    const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
+    const [formItems, setFormItems] = useState<SelectedService[]>(
+        record?.items.map((item) => ({
+            serviceTypeId: item.serviceTypeId,
+            name: item.serviceTypeName,
+            customName: item.customName ?? undefined,
+        })) ?? [],
+    )
 
-    const [isDIY, setIsDIY] = useState(true)
-
-    const [totalCost, setTotalCost] = useState('')
-    const [mileage, setMileage] = useState('')
+    const [isDIY, setIsDIY] = useState(record?.isSelfService ?? true)
+    const [totalCost, setTotalCost] = useState(record?.totalCost?.toFixed(2) ?? '')
+    const [mileage, setMileage] = useState(record?.mileage?.toLocaleString() ?? '')
 
     return (
         <div>
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-primary">Add Service Record</h1>
+                <h1 className="text-3xl font-bold text-primary">
+                    {isEditing ? 'Edit Service Record' : 'Add Service Record'}
+                </h1>
 
                 <p className="mt-1 text-muted">Record maintenance performed on your vehicle.</p>
             </div>
@@ -48,7 +58,7 @@ export default function ServiceRecordForm({
                     type="hidden"
                     name="items"
                     value={JSON.stringify(
-                        selectedServices.map((service) => ({
+                        formItems.map((service) => ({
                             serviceTypeId: service.serviceTypeId,
                             customName: service.customName ?? null,
                         })),
@@ -61,11 +71,12 @@ export default function ServiceRecordForm({
                             <label className="mb-1 block text-sm font-medium text-text">
                                 Service Date
                             </label>
-
                             <input
                                 name="serviceDate"
                                 type="date"
-                                defaultValue={new Date().toISOString().split('T')[0]}
+                                defaultValue={
+                                    record?.serviceDate ?? new Date().toISOString().split('T')[0]
+                                }
                                 max={new Date().toISOString().split('T')[0]}
                                 required
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-text"
@@ -76,7 +87,6 @@ export default function ServiceRecordForm({
                             <label className="mb-1 block text-sm font-medium text-text">
                                 Mileage
                             </label>
-
                             <input
                                 name="mileage"
                                 type="text"
@@ -85,7 +95,6 @@ export default function ServiceRecordForm({
                                 value={mileage}
                                 onChange={(e) => {
                                     const value = e.target.value.replace(/,/g, '')
-
                                     if (/^\d*$/.test(value)) {
                                         setMileage(value ? Number(value).toLocaleString() : '')
                                     }
@@ -123,6 +132,7 @@ export default function ServiceRecordForm({
                         {!isDIY && (
                             <input
                                 name="shopName"
+                                defaultValue={record?.shopName ?? ''}
                                 placeholder="Shop Name"
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-text"
                             />
@@ -132,7 +142,8 @@ export default function ServiceRecordForm({
 
                 <ServiceSelector
                     serviceTypes={serviceTypes}
-                    onChange={setSelectedServices}
+                    initialServices={formItems}
+                    onChange={setFormItems}
                 />
 
                 <FormSection title="Cost">
@@ -144,7 +155,6 @@ export default function ServiceRecordForm({
                         value={totalCost}
                         onChange={(e) => {
                             const value = e.target.value
-
                             if (/^\d*\.?\d{0,2}$/.test(value)) {
                                 setTotalCost(value)
                             }
@@ -162,6 +172,7 @@ export default function ServiceRecordForm({
                     <textarea
                         name="notes"
                         rows={4}
+                        defaultValue={record?.notes ?? ''}
                         placeholder="Optional notes..."
                         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-text"
                     />
@@ -183,7 +194,7 @@ export default function ServiceRecordForm({
                         disabled={isSubmitting}
                         className="rounded-lg bg-primary px-5 py-2 font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {isSubmitting ? 'Saving...' : 'Save Record'}
+                        {isSubmitting ? 'Saving...' : isEditing ? 'Save Changes' : 'Save Record'}
                     </button>
                 </div>
             </Form>

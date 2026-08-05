@@ -20,8 +20,16 @@ export async function action({ request }: Route.ActionArgs) {
     const response = await VehiclesApi.create(request, vehicle)
 
     if (!response.ok) {
+        const error = await response.json()
+
         return {
-            error: 'Failed to create vehicle',
+            error:
+                Object.values(error.errors ?? {})
+                    .flat()
+                    .join(' ') ||
+                error.error ||
+                error.message ||
+                'Failed to create service record',
         }
     }
 

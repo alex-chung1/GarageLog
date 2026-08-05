@@ -52,7 +52,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
             .HasMany(v => v.ServiceRecords)
             .WithOne(sr => sr.Vehicle)
             .HasForeignKey(sr => sr.VehicleId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // ServiceRecord -> Items
         builder

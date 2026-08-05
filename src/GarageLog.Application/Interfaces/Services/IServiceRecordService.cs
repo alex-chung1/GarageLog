@@ -14,5 +14,12 @@ public interface IServiceRecordService
 
     Task<IEnumerable<ServiceRecordResponse>?> GetAllAsync(int vehicleId, int userId);
 
+    Task<ServiceRecordResponse?> UpdateAsync(
+        int vehicleId,
+        int serviceRecordId,
+        int userId,
+        UpdateServiceRecordRequest request
+    );
+
     Task<bool> DeleteAsync(int vehicleId, int serviceRecordId, int userId);
 }
