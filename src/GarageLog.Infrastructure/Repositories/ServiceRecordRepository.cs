@@ -22,14 +22,11 @@ public class ServiceRecordRepository(AppDbContext context) : IServiceRecordRepos
             .Include(sr => sr.Items)
                 .ThenInclude(i => i.ServiceType)
             .OrderByDescending(sr => sr.ServiceDate)
+            .ThenByDescending(sr => sr.Mileage)
             .ToListAsync();
     }
 
-    public async Task<ServiceRecord?> GetPreviousRecordAsync(
-        int vehicleId,
-        DateOnly serviceDate,
-        int? excludeId = null
-    )
+    public async Task<ServiceRecord?> GetPreviousRecordAsync(int vehicleId, DateOnly serviceDate, int? excludeId = null)
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate < serviceDate)
@@ -39,11 +36,7 @@ public class ServiceRecordRepository(AppDbContext context) : IServiceRecordRepos
             .FirstOrDefaultAsync();
     }
 
-    public async Task<ServiceRecord?> GetNextRecordAsync(
-        int vehicleId,
-        DateOnly serviceDate,
-        int? excludeId = null
-    )
+    public async Task<ServiceRecord?> GetNextRecordAsync(int vehicleId, DateOnly serviceDate, int? excludeId = null)
     {
         return await context
             .ServiceRecords.Where(sr => sr.VehicleId == vehicleId && sr.ServiceDate > serviceDate)
