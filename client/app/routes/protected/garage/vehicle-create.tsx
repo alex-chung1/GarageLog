@@ -1,43 +1,43 @@
-import type { Route } from './+types/vehicle-create'
+import type { Route } from './+types/vehicle-create';
 
-import { redirect, useActionData } from 'react-router'
+import { redirect, useActionData } from 'react-router';
 
-import { VehiclesApi } from '~/lib/api/vehicle.server'
+import { VehiclesApi } from '~/lib/api/vehicle.server';
 
-import VehicleForm from '~/components/VehicleForm'
+import VehicleForm from '~/components/VehicleForm';
 
 export async function action({ request }: Route.ActionArgs) {
-    const formData = await request.formData()
+  const formData = await request.formData();
 
-    const vehicle = {
-        type: Number(formData.get('type')),
-        make: formData.get('make'),
-        model: formData.get('model'),
-        year: Number(formData.get('year')),
-        vin: formData.get('vin') || null,
-    }
+  const vehicle = {
+    type: Number(formData.get('type')),
+    make: formData.get('make'),
+    model: formData.get('model'),
+    year: Number(formData.get('year')),
+    vin: formData.get('vin') || null,
+  };
 
-    const response = await VehiclesApi.create(request, vehicle)
+  const response = await VehiclesApi.create(request, vehicle);
 
-    if (!response.ok) {
-        const error = await response.json()
+  if (!response.ok) {
+    const error = await response.json();
 
-        return {
-            error:
-                Object.values(error.errors ?? {})
-                    .flat()
-                    .join(' ') ||
-                error.error ||
-                error.message ||
-                'Failed to create service record',
-        }
-    }
+    return {
+      error:
+        Object.values(error.errors ?? {})
+          .flat()
+          .join(' ') ||
+        error.error ||
+        error.message ||
+        'Failed to create service record',
+    };
+  }
 
-    return redirect('/garage')
+  return redirect('/garage');
 }
 
 export default function VehicleCreate() {
-    const actionData = useActionData<typeof action>()
+  const actionData = useActionData<typeof action>();
 
-    return <VehicleForm error={actionData?.error} />
+  return <VehicleForm error={actionData?.error} />;
 }

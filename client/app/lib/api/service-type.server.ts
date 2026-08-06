@@ -1,14 +1,14 @@
-import { apiFetch } from './client.server'
+import { apiFetch } from './client.server';
 
 export const ServiceTypesApi = {
-    getAll(request: Request) {
-        const cookie = request.headers.get('Cookie')
+  getAll(request: Request) {
+    const cookie = request.headers.get('Cookie');
 
-        return apiFetch('/ServiceType', {
-            method: 'GET',
-            headers: {
-                Cookie: cookie ?? '',
-            },
-        })
-    },
-}
+    return apiFetch('/ServiceType', {
+      method: 'GET',
+      headers: {
+        Cookie: cookie ?? '',
+      },
+    });
+  },
+};
