@@ -5,4 +5,7 @@
     <Project Path="src/GarageLog.Core/GarageLog.Core.csproj" />
     <Project Path="src/GarageLog.Infrastructure/GarageLog.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GarageLog.UnitTests/GarageLog.UnitTests.csproj" />
+  </Folder>
 </Solution>

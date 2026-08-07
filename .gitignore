@@ -78,5 +78,6 @@ Thumbs.db
 # Test / Coverage
 # ======================
 coverage/
+coveragereport/
 TestResults/
 *.trx
