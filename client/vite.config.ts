@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter()],
 
   server: {
-    allowedHosts: ['pusher-thee-correct.ngrok-free.dev'],
     host: true,
     port: 3000,
     proxy: {
