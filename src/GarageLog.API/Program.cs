@@ -2,7 +2,9 @@ using System.Text;
 using GarageLog.API.Middleware;
 using GarageLog.Application;
 using GarageLog.Infrastructure;
+using GarageLog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,11 +22,7 @@ builder.Services.AddCors(options =>
         "AllowFrontend",
         policy =>
         {
-            policy
-                .WithOrigins(allowedOrigins ?? [])
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
+            policy.WithOrigins(allowedOrigins ?? []).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         }
     );
 });
@@ -84,6 +82,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Apply migrations + seed data on startup
+app.ApplyMigrations();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

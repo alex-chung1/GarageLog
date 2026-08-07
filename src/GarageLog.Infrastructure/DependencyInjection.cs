@@ -10,21 +10,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace GarageLog.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // Database
         services.AddDbContext<AppDbContext>(options =>
-            options
-                .UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-                .UseSnakeCaseNamingConvention()
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention()
         );
 
         // Identity
@@ -55,5 +51,12 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
 
         return services;
+    }
+
+    public static void ApplyMigrations(this IHost app)
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
     }
 }
