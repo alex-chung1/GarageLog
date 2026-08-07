@@ -1,4 +1,4 @@
-const baseUrl = process.env.API_URL;
+const baseUrl = process.env.FETCH_URL;
 
 if (!baseUrl) {
   throw new Error('API_URL is not set');
