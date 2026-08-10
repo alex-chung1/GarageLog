@@ -1,5 +1,6 @@
 using GarageLog.Core.Entities;
 using GarageLog.Infrastructure.Identity;
+using GarageLog.Infrastructure.Persistence.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace GarageLog.Infrastructure.Persistence;
 
 public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public AppDbContext(DbContextOptions options)
         : base(options) { }
 
     public DbSet<Vehicle> Vehicles { get; set; }
@@ -62,75 +63,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>
             .OnDelete(DeleteBehavior.Restrict);
 
         // Seed data
-        builder
-            .Entity<ServiceType>()
-            .HasData(
-                new
-                {
-                    Id = 1,
-                    Name = "Oil Change",
-                    Category = "Engine",
-                },
-                new
-                {
-                    Id = 2,
-                    Name = "Tire Rotation",
-                    Category = "Tires",
-                },
-                new
-                {
-                    Id = 3,
-                    Name = "Brake Pad Replacement",
-                    Category = "Brakes",
-                },
-                new
-                {
-                    Id = 4,
-                    Name = "Brake Fluid Flush",
-                    Category = "Brakes",
-                },
-                new
-                {
-                    Id = 5,
-                    Name = "Battery Replacement",
-                    Category = "Electrical",
-                },
-                new
-                {
-                    Id = 6,
-                    Name = "Air Filter Replacement",
-                    Category = "Engine",
-                },
-                new
-                {
-                    Id = 7,
-                    Name = "Cabin Air Filter Replacement",
-                    Category = "Interior",
-                },
-                new
-                {
-                    Id = 8,
-                    Name = "Coolant Flush",
-                    Category = "Cooling System",
-                },
-                new
-                {
-                    Id = 9,
-                    Name = "Transmission Service",
-                    Category = "Transmission",
-                },
-                new
-                {
-                    Id = 10,
-                    Name = "Spark Plug Replacement",
-                    Category = "Engine",
-                },
-                new
-                {
-                    Id = 9999,
-                    Name = "Other",
-                    Category = "Other",
-                }
-            );
+        ServiceTypeSeedData.Seed(builder);
     }
 }
