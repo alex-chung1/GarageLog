@@ -38,14 +38,14 @@ export default function Garage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-primary">My Vehicles</h1>
+          <h1 className="text-3xl font-bold text-primary">My Garage</h1>
 
           <p className="mt-1 text-muted">Manage your vehicles</p>
         </div>
 
         <Link
           to="/garage/vehicle/new"
-          className="rounded-lg bg-primary px-4 py-2 text-white hover:opacity-90"
+          className=" self-start rounded-lg bg-primary px-4 py-2 text-white font-medium hover:opacity-90"
         >
           + Add Vehicle
         </Link>

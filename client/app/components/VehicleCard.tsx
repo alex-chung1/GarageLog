@@ -20,9 +20,7 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleResponse }) {
               : 'No mileage recorded'}
           </p>
 
-          <p>
-            <span className="font-medium text-text">VIN:</span> {vehicle.vin}
-          </p>
+          <p>{/* <span className="font-medium text-text">VIN:</span> {vehicle.vin} */}</p>
         </div>
       </div>
     </div>

@@ -51,9 +51,15 @@ export default function VehicleDetail() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-primary">Service History</h1>
+        <Link
+          to="/garage"
+          className="mb-2 inline-flex items-center gap-1 text-sm text-muted hover:text-text"
+        >
+          ← Back to Garage
+        </Link>
 
-        <p className="mt-1 text-muted">Track maintenance and repairs for this vehicle</p>
+        <h1 className="text-3xl font-bold text-primary">Vehicle Details</h1>
+        <p className="mt-1 text-muted">Service history and maintenance records</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
@@ -64,14 +70,14 @@ export default function VehicleDetail() {
           <div className="mt-4 flex gap-3">
             <Link
               to={`/garage/vehicle/${vehicle.id}/edit`}
-              className="flex flex-1 items-center justify-center rounded-lg border border-border px-4 py-2 text-center font-medium text-text transition hover:bg-background"
+              className="flex h-10 flex-1 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium text-text transition hover:bg-background"
             >
               Edit Vehicle
             </Link>
 
             <Link
               to={`/garage/vehicle/${vehicle.id}/service-record/new`}
-              className="flex-1 rounded-lg bg-primary px-4 py-2 text-center font-medium text-white transition hover:opacity-90"
+              className="flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-lg bg-primary px-4 text-sm font-medium text-white transition hover:opacity-90"
             >
               + Add Service Record
             </Link>

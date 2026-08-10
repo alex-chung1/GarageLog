@@ -37,6 +37,13 @@ export default function ServiceRecordForm({
   return (
     <div>
       <div className="mb-6">
+        <Link
+          to={`/garage/vehicle/${vehicleId}`}
+          className="mb-2 inline-flex items-center gap-1 text-sm text-muted hover:text-text"
+        >
+          ← Back to Vehicle Details
+        </Link>
+
         <h1 className="text-3xl font-bold text-primary">
           {isEditing ? 'Edit Service Record' : 'Add Service Record'}
         </h1>
