@@ -24,14 +24,7 @@ public class Vehicle
     private Vehicle() { }
 
     // Private constructor used by factory method
-    private Vehicle(
-        int userId,
-        VehicleType type,
-        string make,
-        string model,
-        int year,
-        string? vin = null
-    )
+    private Vehicle(int userId, VehicleType type, string make, string model, int year, string? vin = null)
     {
         VehicleValidationRules.ValidateMakeModel(make, model);
         VehicleValidationRules.ValidateYear(year);
@@ -41,19 +34,12 @@ public class Vehicle
         Make = make;
         Model = model;
         Year = year;
-        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin;
+        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin.ToUpperInvariant();
         CreatedAt = DateTime.UtcNow;
     }
 
     // Factory method to create a new vehicle for user
-    public static Vehicle Create(
-        int userId,
-        VehicleType type,
-        string make,
-        string model,
-        int year,
-        string? vin = null
-    )
+    public static Vehicle Create(int userId, VehicleType type, string make, string model, int year, string? vin = null)
     {
         return new Vehicle(userId, type, make, model, year, vin);
     }
@@ -68,15 +54,7 @@ public class Vehicle
         string? notes = null
     )
     {
-        var serviceRecord = new ServiceRecord(
-            this.Id,
-            serviceDate,
-            mileage,
-            isSelfService,
-            totalCost,
-            shopName,
-            notes
-        );
+        var serviceRecord = new ServiceRecord(this.Id, serviceDate, mileage, isSelfService, totalCost, shopName, notes);
 
         _serviceRecords.Add(serviceRecord);
 
@@ -92,7 +70,7 @@ public class Vehicle
         Make = make;
         Model = model;
         Year = year;
-        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin;
+        Vin = string.IsNullOrWhiteSpace(vin) ? null : vin.ToUpperInvariant();
     }
 
     public void ValidateHistoricalMileage(int mileage, ServiceRecord? previous, ServiceRecord? next)

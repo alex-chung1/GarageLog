@@ -102,6 +102,9 @@ export default function VehicleForm({
                 name="vin"
                 maxLength={17}
                 defaultValue={vehicle?.vin ?? ''}
+                onChange={(e) => {
+                  e.currentTarget.value = e.currentTarget.value.toUpperCase();
+                }}
                 placeholder="Optional"
                 className="mt-1 w-full rounded-lg border border-border bg-background p-2"
               />

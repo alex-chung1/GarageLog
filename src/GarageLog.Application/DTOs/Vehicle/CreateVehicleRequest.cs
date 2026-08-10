@@ -20,6 +20,6 @@ public class CreateVehicleRequest
     [Range(1886, 2100)]
     public int Year { get; set; }
 
-    [MaxLength(17)]
+    [RegularExpression(@"^[A-HJ-NPR-Z0-9]{17}$", ErrorMessage = "VIN must be a valid 17-character VIN.")]
     public string? Vin { get; set; }
 }
