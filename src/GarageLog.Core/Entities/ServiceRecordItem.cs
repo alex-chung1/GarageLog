@@ -3,7 +3,7 @@ namespace GarageLog.Core.Entities;
 public class ServiceRecordItem
 {
     // Temporary until these become seeded constants/enums
-    private const int OtherServiceTypeId = 9999;
+    private const int CustomServiceTypeId = 99999;
 
     // Properties
     public int Id { get; private set; }
@@ -25,14 +25,14 @@ public class ServiceRecordItem
 
         customName = string.IsNullOrWhiteSpace(customName) ? null : customName.Trim();
 
-        if (serviceType.Id == OtherServiceTypeId && customName is null)
+        if (serviceType.Id == CustomServiceTypeId && customName is null)
         {
             throw new ArgumentException(
-                "A custom service name is required when the service type is Other."
+                "A custom service name is required when the service type is custom."
             );
         }
 
-        if (serviceType.Id != OtherServiceTypeId)
+        if (serviceType.Id != CustomServiceTypeId)
         {
             customName = null;
         }

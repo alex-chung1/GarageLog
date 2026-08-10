@@ -2,6 +2,8 @@ import type { ServiceType, SelectedService } from '~/types/serviceType';
 
 import { useState } from 'react';
 
+const CUSTOM_SERVICE_TYPE_ID = 99999;
+
 type ServiceSelectorProps = {
   serviceTypes: ServiceType[];
   initialServices?: SelectedService[];
@@ -24,7 +26,7 @@ export default function ServiceSelector({
   const popularServices = serviceTypes.slice(0, 3);
 
   const searchableServices = serviceTypes
-    .filter((service) => service.id !== 9999)
+    .filter((service) => service.id !== CUSTOM_SERVICE_TYPE_ID)
     .filter((service) => !popularServices.some((popular) => popular.id === service.id))
     .filter(
       (service) => !selectedServices.some((selected) => selected.serviceTypeId === service.id)
@@ -69,7 +71,7 @@ export default function ServiceSelector({
     updateSelected([
       ...selectedServices,
       {
-        serviceTypeId: 9999,
+        serviceTypeId: CUSTOM_SERVICE_TYPE_ID,
         name: customName,
         customName,
       },
@@ -152,10 +154,10 @@ export default function ServiceSelector({
           <h3 className="mb-2 font-medium text-text">Selected Services</h3>
 
           {/* System Services */}
-          {selectedServices.some((service) => service.serviceTypeId !== 9999) && (
+          {selectedServices.some((service) => service.serviceTypeId !== CUSTOM_SERVICE_TYPE_ID) && (
             <div className="space-y-2">
               {selectedServices
-                .filter((service) => service.serviceTypeId !== 9999)
+                .filter((service) => service.serviceTypeId !== CUSTOM_SERVICE_TYPE_ID)
                 .map((service) => (
                   <div
                     key={service.serviceTypeId}
@@ -176,13 +178,13 @@ export default function ServiceSelector({
           )}
 
           {/* Custom Services */}
-          {selectedServices.some((service) => service.serviceTypeId === 9999) && (
+          {selectedServices.some((service) => service.serviceTypeId === CUSTOM_SERVICE_TYPE_ID) && (
             <div className="mt-4">
               <h4 className="mb-2 text-sm font-semibold text-primary">Custom Services</h4>
 
               <div className="space-y-2">
                 {selectedServices
-                  .filter((service) => service.serviceTypeId === 9999)
+                  .filter((service) => service.serviceTypeId === CUSTOM_SERVICE_TYPE_ID)
                   .map((service, index) => (
                     <div
                       key={`${service.serviceTypeId}-${service.customName}-${index}`}
