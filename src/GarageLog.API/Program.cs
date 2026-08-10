@@ -83,21 +83,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Apply migrations + seed data on startup
-app.ApplyMigrations();
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-// HTTPS is handled externally in production environments
-if (!app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
-}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 // Configure request pipeline
