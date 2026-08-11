@@ -8,6 +8,10 @@ GarageLog provides a centralized place to track vehicle ownership and maintenanc
 
 The project was built as a full-stack application to explore modern application architecture, authentication, database design, API development, and containerized development workflows.
 
+## Demo
+
+![GarageLog Demo](docs/demo.gif)
+
 ## Tech Stack
 
 ### Frontend
@@ -91,16 +95,12 @@ Handles data persistence, Entity Framework Core, PostgreSQL, repositories, and o
 - Categorize services by service type
 - View maintenance history for individual vehicles
 
----
-
-# Getting Started
+## Getting Started
 
 GarageLog supports two ways to run the application:
 
 - **Local Development** — recommended for actively developing GarageLog
 - **Docker Compose** — runs the full application stack in containers
-
----
 
 ## Local Development
 
@@ -211,8 +211,6 @@ http://localhost:3000
 
 Register an account to get started.
 
----
-
 ## Docker Compose
 
 To run the full stack — API, frontend, and PostgreSQL — in containers with a single command:
@@ -257,8 +255,6 @@ Once running, open:
 http://localhost:3000
 ```
 
----
-
 ## Environment & Secrets
 
 Do not commit `.env` files or other files containing secrets to the repository.
@@ -266,8 +262,6 @@ Do not commit `.env` files or other files containing secrets to the repository.
 For local API development, use .NET user secrets.
 
 For Docker Compose, use the root `.env` file created from `.env.example`.
-
----
 
 ## Project Structure
 
