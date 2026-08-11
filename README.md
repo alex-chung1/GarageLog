@@ -4,7 +4,7 @@ GarageLog is a full-stack vehicle maintenance tracker designed to help users man
 
 ## Overview
 
-GarageLog provides a centralized place to track vehicle ownership and maintenance history. Users can add vehicles, record mileage, document maintenance and repairs, track service costs, and distinguish between DIY work and professional services.
+GarageLog provides a centralized place to track vehicle ownership and maintenance history. Users can add their vehicles, record mileage, document maintenance and repairs, track service costs, and distinguish between DIY work and professional services.
 
 The project was built as a full-stack application to explore modern application architecture, authentication, database design, API development, and containerized development workflows.
 
@@ -91,76 +91,109 @@ Handles data persistence, Entity Framework Core, PostgreSQL, repositories, and o
 - Categorize services by service type
 - View maintenance history for individual vehicles
 
-## Getting Started
+---
 
-### 1. Prerequisites
+# Getting Started
 
-Make sure the following are installed before running GarageLog:
+GarageLog supports two ways to run the application:
+
+- **Local Development** — recommended for actively developing GarageLog
+- **Docker Compose** — runs the full application stack in containers
+
+---
+
+## Local Development
+
+This is the recommended workflow for actively developing GarageLog — it gives you hot reload on the frontend and full debugger support on the backend.
+
+### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/)
 - [Node.js](https://nodejs.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (used to run PostgreSQL only)
 
-### 2. Clone the Repository
-
-Clone the repository and navigate to the project directory:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/alex-chung1/GarageLog.git
 cd GarageLog
 ```
 
-### 3. Configure Environment Variables
+### 2. Start PostgreSQL
 
-GarageLog includes `.env.example` files with the required development configuration.
-
-Create the root environment file used by Docker Compose:
+The database runs in Docker even during local development, so you don't need to install Postgres directly:
 
 ```bash
 cp .env.example .env
+docker compose up db
 ```
 
-Create the frontend environment file:
+Leave this running in its own terminal.
+
+### 3. Configure the Backend
+
+When running the API directly with `dotnet run`, use .NET user secrets for configuration.
+
+The PostgreSQL credentials are defined in the root `.env.example`:
+
+```text
+POSTGRES_USER=garagelog_dev
+POSTGRES_PASSWORD=localdevpass
+POSTGRES_DB=garagelog
+```
+
+Configure the API using the same credentials:
 
 ```bash
-cp client/.env.example client/.env
+cd src/GarageLog.API
+
+dotnet user-secrets init
+
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=garagelog;Username=garagelog_dev;Password=localdevpass;Include Error Detail=true"
+
+dotnet user-secrets set "JwtSettings:Secret" "your-super-secret-key-that-is-at-least-32-characters"
 ```
 
-The root `.env` is used by the Docker Compose services, while `client/.env` contains configuration for the React frontend.
+The connection string uses `Host=localhost` here, not `Host=db` — `db` is the Docker Compose service name and only resolves inside the Docker network.
 
-> Do not commit `.env` files or other files containing secrets to the repository.
+Since `docker compose up db` exposes Postgres on `5432:5432`, `localhost` is correct when the API runs directly on your machine.
 
-### 4. Start Docker Compose
+`POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` in `.env` configure the Postgres container itself and don't need to be set separately for the API.
 
-From the project root, build and start the Docker Compose services:
+`ASPNETCORE_ENVIRONMENT` is set via `launchSettings.json` for local runs, not user secrets.
+
+### 4. Run the Backend
 
 ```bash
-docker compose up --build
+dotnet run
 ```
 
-This starts:
+The API will be available at:
 
-- **GarageLog API** — ASP.NET Core API on `http://localhost:5000`
-- **PostgreSQL** — PostgreSQL database on `localhost:5432`
+```text
+http://localhost:5000
+```
 
-When running in the Development environment, the API automatically:
+On startup in the Development environment, it automatically applies pending EF Core migrations and seeds initial service types — no manual database setup needed.
 
-- Applies pending Entity Framework Core migrations
-- Seeds the application's initial service types
+### 5. Configure and Run the Frontend
 
-No manual database migration or setup commands are required.
-
-Leave this terminal running while using GarageLog.
-
-### 5. Start the Frontend
-
-Open a new terminal and navigate to the frontend directory:
+In a new terminal:
 
 ```bash
 cd client
+cp .env.example .env
 npm install
 npm run dev
 ```
+
+`client/.env.example` defaults to:
+
+```text
+API_URL=http://localhost:5000/api
+```
+
+which is correct for this local (non-Docker) setup, since the frontend and API are both running directly on your machine.
 
 The frontend will be available at:
 
@@ -170,10 +203,92 @@ http://localhost:3000
 
 ### 6. Open GarageLog
 
-Once the API and frontend are running, open:
+Once Postgres, the API, and the frontend are all running, open:
 
 ```text
 http://localhost:3000
 ```
 
-You can now register an account and begin adding vehicles and maintenance records.
+Register an account to get started.
+
+---
+
+## Docker Compose
+
+To run the full stack — API, frontend, and PostgreSQL — in containers with a single command:
+
+### 1. Configure Environment Variables
+
+From the repository root:
+
+```bash
+cp .env.example .env
+```
+
+### 2. Start the Application
+
+```bash
+docker compose up --build
+```
+
+### Services
+
+| Service                | URL                     |
+| ---------------------- | ----------------------- |
+| **GarageLog API**      | `http://localhost:5000` |
+| **GarageLog Frontend** | `http://localhost:3000` |
+| **PostgreSQL**         | `localhost:5432`        |
+
+The frontend container's `API_URL` is set directly in `docker-compose.yml`:
+
+```text
+http://api:5000/api
+```
+
+This uses the Docker network's internal service name and does not depend on `client/.env`.
+
+The API automatically applies migrations and seeds service types on startup, same as local development.
+
+### 3. Open GarageLog
+
+Once running, open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Environment & Secrets
+
+Do not commit `.env` files or other files containing secrets to the repository.
+
+For local API development, use .NET user secrets.
+
+For Docker Compose, use the root `.env` file created from `.env.example`.
+
+---
+
+## Project Structure
+
+```text
+GarageLog/
+├── client/
+│   └── Dockerfile
+├── src/
+│   ├── GarageLog.API/
+│   ├── GarageLog.Application/
+│   ├── GarageLog.Core/
+│   └── GarageLog.Infrastructure/
+├── tests/
+│   └── GarageLog.UnitTests/
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── GarageLog.slnx
+└── LICENSE
+```
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.
