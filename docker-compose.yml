@@ -9,6 +9,15 @@ services:
       db:
         condition: service_healthy
 
+  frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:5000
+    depends_on:
+      - api
+
   db:
     image: postgres:16
     ports:
