@@ -7,10 +7,6 @@ import { getErrorMessage } from '~/lib/errors';
 
 import VehicleCard from '~/components/VehicleCard';
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: 'GarageLog' }, { name: 'description', content: 'Manage your vehicles' }];
-}
-
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const response = await VehiclesApi.getAll(request);

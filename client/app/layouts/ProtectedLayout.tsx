@@ -30,7 +30,7 @@ export default function ProtectedLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-text">
+    <div className="flex min-h-screen flex-col bg-background text-text">
       {/* Global Submit Loading Overlay */}
       {isSubmitting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -96,9 +96,14 @@ export default function ProtectedLayout() {
       </nav>
 
       {/* Page Content */}
-      <main className="p-4 md:p-8">
+      <main className="flex-1 p-4 md:p-8">
         <Outlet />
       </main>
+
+      {/* Footer */}
+      <footer className="px-4 py-6 text-center text-sm text-muted">
+        Copyright © 2026 Alexander Chung
+      </footer>
     </div>
   );
 }

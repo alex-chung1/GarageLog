@@ -24,6 +24,10 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export function meta({}: Route.MetaArgs) {
+  return [{ title: 'GarageLog' }, { name: 'description', content: 'Manage your vehicles' }];
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
