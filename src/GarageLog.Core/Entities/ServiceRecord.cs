@@ -22,7 +22,9 @@ public class ServiceRecord
     public IReadOnlyCollection<ServiceRecordItem> Items => _items.AsReadOnly();
 
     // Private constructor for EF Core
-    private ServiceRecord() { }
+    private ServiceRecord()
+    {
+    }
 
     // Internal constructor to ensure only "Vehicle.AddNewServiceRecord" should create these
     internal ServiceRecord(

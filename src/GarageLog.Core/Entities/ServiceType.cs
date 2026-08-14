@@ -10,8 +10,10 @@ public class ServiceType
     // Navigation
     public ICollection<ServiceRecordItem> ServiceRecordItems { get; private set; } = [];
 
-    // // EF Core constructor
-    // private ServiceType() { }
+    // Private constructor for EF Core
+    private ServiceType()
+    {
+    }
 
     // Domain constructor
     public ServiceType(string name, string category)

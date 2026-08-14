@@ -21,7 +21,9 @@ public class Vehicle
     public IReadOnlyCollection<ServiceRecord> ServiceRecords => _serviceRecords.AsReadOnly();
 
     // Private constructor for EF Core
-    private Vehicle() { }
+    private Vehicle()
+    {
+    }
 
     // Private constructor used by factory method
     private Vehicle(int userId, VehicleType type, string make, string model, int year, string? vin = null)
