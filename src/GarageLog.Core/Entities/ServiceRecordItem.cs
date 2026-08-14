@@ -3,7 +3,7 @@ namespace GarageLog.Core.Entities;
 public class ServiceRecordItem
 {
     // Temporary until these become seeded constants/enums
-    private const int CustomServiceTypeId = 99999;
+    internal const int CustomServiceTypeId = 99999;
 
     // Properties
     public int Id { get; private set; }
@@ -15,8 +15,10 @@ public class ServiceRecordItem
     public ServiceRecord ServiceRecord { get; private set; } = null!;
     public ServiceType ServiceType { get; private set; } = null!;
 
-    // EF Core constructor
-    private ServiceRecordItem() { }
+    // Private constructor for EF Core
+    private ServiceRecordItem()
+    {
+    }
 
     // Only ServiceRecord.AddServiceItem should create these
     internal ServiceRecordItem(ServiceType serviceType, string? customName = null)
@@ -38,6 +40,7 @@ public class ServiceRecordItem
         }
 
         ServiceTypeId = serviceType.Id;
+        ServiceType = serviceType;
         CustomName = customName;
     }
 }
