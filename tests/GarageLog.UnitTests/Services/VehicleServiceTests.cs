@@ -31,7 +31,7 @@ public class VehicleServiceTests
         // Arrange
         var request = new CreateVehicleRequest
         {
-            Type = VehicleType.Car, Make = "Honda", Model = "Civic", Year = 2020,
+            Type = VehicleType.Car, Make = "Honda", Model = "Civic", Year = 2021,
         };
 
         // Act
@@ -41,7 +41,7 @@ public class VehicleServiceTests
         result.Should().NotBeNull();
         result.Make.Should().Be("Honda");
         result.Model.Should().Be("Civic");
-        result.Year.Should().Be(2020);
+        result.Year.Should().Be(2021);
         result.Type.Should().Be(VehicleType.Car);
         _vehicleRepoMock.Verify(r => r.Add(It.IsAny<Vehicle>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Once);
