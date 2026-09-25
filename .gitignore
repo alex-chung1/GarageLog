@@ -82,3 +82,9 @@ coveragereport/
 coverage-report/
 TestResults/
 *.trx
+
+# ======================
+# Deployment artifacts
+# ======================
+**/publish/
+*.zip
