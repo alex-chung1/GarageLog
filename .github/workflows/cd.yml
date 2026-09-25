@@ -42,36 +42,40 @@ jobs:
           package: ./publish
 
   deploy-web:
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: client/package-lock.json
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+        cache: npm
+        cache-dependency-path: client/package-lock.json
 
-      - name: Install dependencies
-        working-directory: client
-        run: npm ci
+    - name: Install dependencies
+      working-directory: client
+      run: npm ci
 
-      - name: Build frontend
-        working-directory: client
-        run: npm run build
+    - name: Build frontend
+      working-directory: client
+      run: npm run build
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Remove development dependencies
+      working-directory: client
+      run: npm prune --omit=dev
 
-      - name: Deploy frontend
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: garage-log-web
-          package: ./client/build
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Deploy frontend
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: garage-log-web
+        package: ./client
