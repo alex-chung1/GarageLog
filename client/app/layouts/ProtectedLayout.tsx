@@ -55,7 +55,7 @@ export default function ProtectedLayout() {
 
           {/* Desktop Menu */}
           <div className="hidden items-center gap-4 md:flex">
-            <span className="text-sm text-muted">Welcome, {user.firstName}</span>
+            <span className="text-sm text-muted">Hello, {user.firstName}</span>
 
             <ThemeToggle />
 
@@ -78,7 +78,7 @@ export default function ProtectedLayout() {
         {menuOpen && (
           <div className="border-t border-border bg-card md:hidden">
             <div className="flex flex-col items-start gap-4 p-4">
-              <span className="text-sm text-muted">Welcome, {user.firstName}</span>
+              <span className="text-sm text-muted">Hello, {user.firstName}</span>
 
               <ThemeToggle />
 
