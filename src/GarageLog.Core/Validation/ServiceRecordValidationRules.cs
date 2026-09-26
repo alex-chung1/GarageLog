@@ -22,7 +22,7 @@ public static class ServiceRecordValidationRules
             : shopName.Trim();
 
         if (!isSelfService && normalized is null)
-            throw new ArgumentException("Shop name is required for non-self-service records.");
+            throw new ArgumentException("Shop name is required for non self-service records.");
 
         return normalized;
     }
