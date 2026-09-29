@@ -80,42 +80,41 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       {/* Main */}
       <main>
         {/* Hero */}
-        <section className="relative isolate min-h-[680px] overflow-hidden pt-18">
-          {/* Background Image */}
-          <img
-            src="/images/hero-car.jpg"
-            alt=""
-            className="absolute inset-0 -z-20 h-full w-full object-cover"
-          />
+        <section className="relative isolate overflow-hidden">
+          <div className="relative min-h-[560px] sm:min-h-[620px] lg:min-h-[680px]">
+            <img
+              src="/images/hero-car.jpg"
+              alt=""
+              className="absolute inset-0 -z-20 h-full w-full object-cover"
+            />
 
-          {/* Image Overlay */}
-          <div className="absolute inset-0 -z-10 bg-background/80" />
+            <div className="absolute inset-0 -z-10 bg-background/80" />
 
-          {/* Hero Content */}
-          <div className="mx-auto flex min-h-[662px] max-w-7xl items-center justify-center px-4 py-24 text-center">
-            <div>
-              <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-primary">
-                Garage management made simple
-              </p>
+            <div className="mx-auto flex min-h-[560px] max-w-7xl items-center justify-center px-4 py-20 text-center sm:min-h-[620px] sm:px-6 sm:py-24 lg:min-h-[680px]">
+              <div>
+                <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-primary">
+                  Garage management made simple
+                </p>
 
-              <h1 className="text-5xl font-bold tracking-tight md:text-7xl">
-                Your garage.
-                <br />
-                <span className="text-primary">One place.</span>
-              </h1>
+                <h1 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+                  Your garage.
+                  <br />
+                  <span className="text-primary">One place.</span>
+                </h1>
 
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">
-                Keep track of your vehicles, maintenance, and service history without digging
-                through receipts and notes.
-              </p>
+                <p className="mx-auto mt-6 max-w-2xl text-lg text-muted sm:text-xl">
+                  Keep track of your vehicles, maintenance, and service history without digging
+                  through receipts and notes.
+                </p>
 
-              <div className="mt-8">
-                <Link
-                  to={user ? '/garage' : '/register'}
-                  className="inline-block rounded-lg bg-primary px-6 py-3 font-medium text-white shadow-lg transition hover:opacity-90"
-                >
-                  {user ? 'Go to My Garage' : 'Get Started'}
-                </Link>
+                <div className="mt-8">
+                  <Link
+                    to={user ? '/garage' : '/register'}
+                    className="inline-block rounded-lg bg-primary px-6 py-3 font-medium text-white shadow-lg transition hover:opacity-90"
+                  >
+                    {user ? 'Go to My Garage' : 'Get Started'}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

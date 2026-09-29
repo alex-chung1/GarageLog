@@ -21,9 +21,12 @@ export default function AuthLayout() {
   return (
     <div className="min-h-screen bg-background text-text">
       <nav className="border-b border-border bg-card">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
+        <div className="mx-auto flex h-18 max-w-9xl items-center justify-between px-4 md:px-6">
           {/* Brand */}
-          <Link to="/" className="text-xl font-bold text-primary">
+          <Link
+            to="/"
+            className="text-xl font-bold tracking-tight text-primary transition-opacity hover:opacity-80"
+          >
             GarageLog
           </Link>
 
