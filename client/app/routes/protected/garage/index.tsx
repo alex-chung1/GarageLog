@@ -32,27 +32,29 @@ export default function Garage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">My Garage</h1>
+      <div className="mb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-primary sm:text-3xl">My Garage</h1>
 
-          <p className="mt-1 text-muted">Manage your vehicles</p>
+            <p className="mt-1 text-sm text-muted sm:text-base">Manage your vehicles</p>
+          </div>
+
+          <Link
+            to="/garage/vehicle/new"
+            className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 sm:w-auto sm:px-4 sm:py-2"
+          >
+            + Add Vehicle
+          </Link>
         </div>
-
-        <Link
-          to="/garage/vehicle/new"
-          className=" self-start rounded-lg bg-primary px-4 py-2 text-white font-medium hover:opacity-90"
-        >
-          + Add Vehicle
-        </Link>
       </div>
 
       {/* Error */}
       {error && <div className="mb-6 rounded-lg bg-red-950 p-3 text-sm text-red-300">{error}</div>}
 
-      {/* VehicleCard */}
+      {/* Vehicle Cards */}
       {vehicles.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card p-6 text-muted shadow-sm">
+        <div className="rounded-xl border border-border bg-card p-6 text-muted">
           No vehicles found.
         </div>
       ) : (
