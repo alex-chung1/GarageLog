@@ -7,7 +7,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   try {
     const response = await AuthApi.getCurrentUser(request);
 
-    if (response.ok) return redirect('/');
+    if (response.ok) {
+      return redirect('/');
+    }
 
     return null;
   } catch {
@@ -18,9 +20,10 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function AuthLayout() {
   return (
     <div className="min-h-screen bg-background text-text">
-      <nav className="border-b border-border bg-card">
+      {/* Navbar */}
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-card/75 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-9xl items-center justify-between px-4 md:px-6">
-          {/* Brand */}
+          {/* Logo */}
           <Link
             to="/"
             className="text-xl font-bold tracking-tight text-primary transition-opacity hover:opacity-80"
@@ -30,7 +33,8 @@ export default function AuthLayout() {
         </div>
       </nav>
 
-      <main>
+      {/* Main */}
+      <main className="pt-8">
         <Outlet />
       </main>
     </div>
