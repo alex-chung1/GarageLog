@@ -1,6 +1,6 @@
 import type { Route } from '../+types/root';
 
-import { Outlet, redirect } from 'react-router';
+import { Link, Outlet, redirect } from 'react-router';
 import { AuthApi } from '~/lib/api/auth.server';
 
 import ThemeToggle from '~/components/ThemeToggle';
@@ -19,12 +19,28 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AuthLayout() {
   return (
-    <div className="relative min-h-screen bg-background text-text">
-      <div className="absolute right-4 top-4">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen bg-background text-text">
+      <nav className="border-b border-border bg-card">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
+          {/* Brand */}
+          <Link to="/" className="text-xl font-bold text-primary">
+            GarageLog
+          </Link>
 
-      <Outlet />
+          {/* Navigation */}
+          <div className="flex items-center gap-4">
+            <Link to="/" className="text-sm font-medium text-muted transition hover:text-primary">
+              Home
+            </Link>
+
+            <ThemeToggle />
+          </div>
+        </div>
+      </nav>
+
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }

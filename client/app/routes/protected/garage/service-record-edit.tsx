@@ -105,27 +105,29 @@ export default function ServiceRecordEdit() {
         error={actionData?.error}
       />
 
-      <div className="mx-auto mt-8 max-w-3xl text-center">
+      {/* Danger Zone */}
+      <div className="mx-auto mt-8 max-w-3xl border-t border-border pt-6">
         {!confirmingDelete ? (
           <button
             type="button"
             onClick={() => setConfirmingDelete(true)}
-            className="text-sm font-medium text-red-500 hover:underline"
+            className="rounded-lg border border-red-500/50 px-4 py-2 text-sm font-medium text-red-500 transition hover:border-red-500 hover:bg-red-500/10"
           >
             Delete Service Record
           </button>
         ) : (
-          <div className="space-y-3">
+          <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4">
             <p className="text-sm text-red-500">
               This will permanently delete this service record. Are you sure?
             </p>
 
-            <div className="flex justify-center gap-3">
+            <div className="mt-4 flex gap-3">
               <Form method="post">
                 <input type="hidden" name="intent" value="delete" />
+
                 <button
                   type="submit"
-                  className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                  className="rounded-lg border border-red-500/50 px-4 py-2 text-sm font-medium text-red-500 transition hover:border-red-500 hover:bg-red-500/10"
                 >
                   Yes, Delete
                 </button>
@@ -134,7 +136,7 @@ export default function ServiceRecordEdit() {
               <button
                 type="button"
                 onClick={() => setConfirmingDelete(false)}
-                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text"
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text transition hover:bg-background"
               >
                 Cancel
               </button>

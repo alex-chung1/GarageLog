@@ -61,7 +61,7 @@ export default function Garage() {
             <Link
               key={vehicle.id}
               to={`/garage/vehicle/${vehicle.id}`}
-              className="block transition hover:-translate-y-1"
+              className="block transition duration-200 hover:-translate-y-1"
             >
               <VehicleCard vehicle={vehicle} />
             </Link>

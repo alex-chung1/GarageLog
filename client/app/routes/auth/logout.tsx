@@ -15,7 +15,7 @@ export async function action({ request }: Route.ActionArgs) {
     .filter(Boolean)
     .join('; ');
 
-  return redirect('/login', {
+  return redirect('/', {
     headers: {
       'Set-Cookie': cookie,
     },

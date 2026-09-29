@@ -46,29 +46,44 @@ export default function ProtectedLayout() {
         </div>
       )}
 
-      <nav className="border-b border-border bg-card">
-        <div className="flex h-16 items-center justify-between px-4">
+      {/* Navbar */}
+      <nav className="fixed inset-x-0 top-0 z-40 border-b border-border/50 bg-card/75 backdrop-blur-md">
+        <div className="mx-auto flex h-18 max-w-9xl items-center justify-between px-4 md:px-6">
           {/* Brand */}
-          <Link to="/">
-            <h1 className="text-xl font-bold text-primary">GarageLog</h1>
+          <Link
+            to="/garage"
+            className="text-xl font-bold tracking-tight text-primary transition-opacity hover:opacity-80"
+          >
+            GarageLog
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden items-center gap-4 md:flex">
-            <span className="text-sm text-muted">Hello, {user.firstName}</span>
-
-            <ThemeToggle />
+          <div className="hidden items-center gap-2 md:flex">
+            <span className="px-3 text-sm text-muted">Welcome back, {user.firstName}</span>
 
             <Form method="post" action="/logout">
-              <button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
+              <button
+                type="submit"
+                className="rounded-lg border border-border bg-card/60 px-4 py-2 text-sm font-medium text-text shadow-sm transition hover:border-primary hover:text-primary"
+              >
                 Log out
               </button>
             </Form>
+
+            <div className="ml-1 border-l border-border/60 pl-2">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Mobile Actions */}
-          <div className="flex items-center gap-3 md:hidden">
-            <button className="text-2xl text-muted" onClick={() => setMenuOpen(!menuOpen)}>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              type="button"
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="rounded-lg px-3 py-2 text-xl text-muted transition hover:bg-background hover:text-text"
+            >
               {menuOpen ? '✕' : '☰'}
             </button>
           </div>
@@ -76,28 +91,37 @@ export default function ProtectedLayout() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="border-t border-border bg-card md:hidden">
-            <div className="flex flex-col items-start gap-4 p-4">
-              <span className="text-sm text-muted">Hello, {user.firstName}</span>
+          <div className="border-t border-border/50 bg-card/95 backdrop-blur-md md:hidden">
+            <div className="flex items-center justify-between px-4 py-5">
+              {/* User */}
+              <div>
+                <p className="text-sm text-muted">Signed in as</p>
+                <p className="mt-1 font-medium text-text">{user.firstName}</p>
+              </div>
 
-              <ThemeToggle />
+              {/* Actions */}
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
 
-              <Form method="post" action="/logout">
-                <button
-                  type="submit"
-                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
-                >
-                  Log out
-                </button>
-              </Form>
+                <Form method="post" action="/logout">
+                  <button
+                    type="submit"
+                    className="rounded-lg border border-border bg-card/60 px-4 py-2 text-sm font-medium text-text shadow-sm transition hover:border-primary hover:text-primary"
+                  >
+                    Log out
+                  </button>
+                </Form>
+              </div>
             </div>
           </div>
         )}
       </nav>
 
       {/* Page Content */}
-      <main className="flex-1 p-4 md:p-8">
-        <Outlet />
+      <main className="flex-1 pt-18">
+        <div className="p-4 md:p-8">
+          <Outlet />
+        </div>
       </main>
 
       {/* Footer */}
