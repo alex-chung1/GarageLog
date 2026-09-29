@@ -3,8 +3,6 @@ import type { Route } from '../+types/root';
 import { Link, Outlet, redirect } from 'react-router';
 import { AuthApi } from '~/lib/api/auth.server';
 
-import ThemeToggle from '~/components/ThemeToggle';
-
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const response = await AuthApi.getCurrentUser(request);
@@ -29,15 +27,6 @@ export default function AuthLayout() {
           >
             GarageLog
           </Link>
-
-          {/* Navigation */}
-          <div className="flex items-center gap-4">
-            <Link to="/" className="text-sm font-medium text-muted transition hover:text-primary">
-              Home
-            </Link>
-
-            <ThemeToggle />
-          </div>
         </div>
       </nav>
 

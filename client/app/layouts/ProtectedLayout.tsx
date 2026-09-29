@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { Link, Form, Outlet, redirect, useLoaderData, useNavigation } from 'react-router';
 import { AuthApi } from '~/lib/api/auth.server';
 
-import ThemeToggle from '~/components/ThemeToggle';
-
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     const response = await AuthApi.getCurrentUser(request);
@@ -69,10 +67,6 @@ export default function ProtectedLayout() {
                 Log out
               </button>
             </Form>
-
-            <div className="ml-1 border-l border-border/60 pl-2">
-              <ThemeToggle />
-            </div>
           </div>
 
           {/* Mobile Actions */}
@@ -101,8 +95,6 @@ export default function ProtectedLayout() {
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <ThemeToggle />
-
                 <Form method="post" action="/logout">
                   <button
                     type="submit"

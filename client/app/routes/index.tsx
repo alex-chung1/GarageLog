@@ -3,7 +3,6 @@ import type { UserResponse } from '~/types/auth';
 
 import { Link } from 'react-router';
 import { AuthApi } from '~/lib/api/auth.server';
-import ThemeToggle from '~/components/ThemeToggle';
 
 export async function loader({ request }: Route.LoaderArgs) {
   let user: UserResponse | null = null;
@@ -58,21 +57,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   to="/login"
                   className="rounded-lg px-4 py-2 text-sm font-medium text-muted transition hover:bg-background hover:text-text"
                 >
-                  Log in
-                </Link>
-
-                <Link
-                  to="/register"
-                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
-                >
-                  Get Started
+                  Sign in
                 </Link>
               </>
             )}
 
-            <div className="ml-1 border-l border-border/60 pl-2">
-              <ThemeToggle />
-            </div>
+            <div className="ml-1 border-l border-border/60 pl-2"></div>
           </div>
         </div>
       </nav>
