@@ -43,26 +43,17 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 <span className="hidden px-3 text-sm text-muted sm:block">
                   Hello, {user.firstName}
                 </span>
-
-                <Link
-                  to="/garage"
-                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
-                >
-                  My Garage
-                </Link>
               </>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="rounded-lg px-4 py-2 text-sm font-medium text-muted transition hover:bg-background hover:text-text"
+                  className="rounded-lg px-2 py-2 text-sm font-medium text-muted transition hover:bg-background hover:text-text"
                 >
                   Sign in
                 </Link>
               </>
             )}
-
-            <div className="ml-1 border-l border-border/60 pl-2"></div>
           </div>
         </div>
       </nav>
