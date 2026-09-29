@@ -34,7 +34,7 @@ export async function action({ request }: Route.ActionArgs) {
       };
     }
 
-    return redirect('/', {
+    return redirect('/garage', {
       headers: copySetCookieHeaders(response),
     });
   } catch (error) {

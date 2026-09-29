@@ -1,20 +1,24 @@
 @import 'tailwindcss';
 
+/* Light Theme */
+
 :root {
-  --background: #f9fafb;
-  --card: #ffffff;
-  --border: #e5e7eb;
-  --text: #111827;
-  --muted: #6b7280;
+  --background: #d4d5d7;
+  --card: #dcdddf;
+  --border: #c4c5c8;
+  --text: #18181b;
+  --muted: #62646a;
   --primary: #2563eb;
 }
 
+/* Dark Theme */
+
 .dark {
-  --background: #030712;
-  --card: #111827;
-  --border: #1f2937;
-  --text: #f9fafb;
-  --muted: #9ca3af;
+  --background: #0a0a0a;
+  --card: #121212;
+  --border: #222222;
+  --text: #e5e5e5;
+  --muted: #8a8a8a;
   --primary: #3b82f6;
 }
 
